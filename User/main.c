@@ -1,19 +1,19 @@
 /**
  ****************************************************************************************************
  * @file        main.c
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      æ­£ç‚¹åŸå­å›¢é˜Ÿ(ALIENTEK)
  * @version     V1.0
  * @date        2022-09-06
- * @brief       Ó²¼şJPEG½âÂë ÊµÑé
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ * @brief       ç¡¬ä»¶JPEGè§£ç  å®éªŒ
+ * @license     Copyright (c) 2020-2032, å¹¿å·å¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó °¢²¨ÂŞ H743¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * å®éªŒå¹³å°:æ­£ç‚¹åŸå­ é˜¿æ³¢ç½— H743å¼€å‘æ¿
+ * åœ¨çº¿è§†é¢‘:www.yuanzige.com
+ * æŠ€æœ¯è®ºå›:www.openedv.com
+ * å…¬å¸ç½‘å€:www.alientek.com
+ * è´­ä¹°åœ°å€:openedv.taobao.com
  *
  ****************************************************************************************************
  */
@@ -40,14 +40,14 @@
 
 //#define EMO_DEBUG  1
 
-/* ±íÇé±àºÅ -> GIF ÎÄ¼şÃû Ó³Éä±í */
+/* è¡¨æƒ…ç¼–å· -> GIF æ–‡ä»¶å æ˜ å°„è¡¨ */
 typedef struct
 {
-    uint8_t code;        /* Ğ­ÒéÖĞµÄ Êı¾İ ×Ö½Ú£¬±ÈÈç 0x01¡¢0x05 ... */
-    const char *name;    /* ¶ÔÓ¦µÄ GIF ÎÄ¼şÃû£¨·ÅÔÚ 1:/PICTURE Ä¿Â¼ÏÂ£© */
+    uint8_t code;        /* åè®®ä¸­çš„ æ•°æ® å­—èŠ‚ï¼Œæ¯”å¦‚ 0x01ã€0x05 ... */
+    const char *name;    /* å¯¹åº”çš„ GIF æ–‡ä»¶åï¼ˆæ”¾åœ¨ 1:/PICTURE ç›®å½•ä¸‹ï¼‰ */
 } GifEntry;
 
-/* °´ÕÕÄã PC ¶ËµÄ gif_map Ò»Ò»¶ÔÓ¦ÌîĞ´ */
+/* æŒ‰ç…§ä½  PC ç«¯çš„ gif_map ä¸€ä¸€å¯¹åº”å¡«å†™ */
 static const GifEntry g_gif_map[] =
 {
     {0x01, "happy.gif"},          // "01"
@@ -73,10 +73,10 @@ static const GifEntry g_gif_map[] =
     {0x0B, "wait.gif"},           // "0B"
 };
 
-/* Ó³Éä±í³¤¶È */
+/* æ˜ å°„è¡¨é•¿åº¦ */
 #define GIF_MAP_NUM   (sizeof(g_gif_map) / sizeof(g_gif_map[0]))
 
-/* ¸ù¾İ code ²éÎÄ¼şÃû£¬ÕÒ²»µ½·µ»Ø NULL */
+/* æ ¹æ® code æŸ¥æ–‡ä»¶åï¼Œæ‰¾ä¸åˆ°è¿”å› NULL */
 static const char *gif_get_name_by_code(uint8_t code)
 {
     for (uint32_t i = 0; i < GIF_MAP_NUM; i++)
@@ -89,16 +89,16 @@ static const char *gif_get_name_by_code(uint8_t code)
     return NULL;
 }
 
-/* ´®¿ÚĞ­Òé½âÎö½á¹û£ºÊÕµ½Ò»Ö¡ AA 55 00 XX FB ¾Í°Ñ XX ·Åµ½ÕâÀï */
+/* ä¸²å£åè®®è§£æç»“æœï¼šæ”¶åˆ°ä¸€å¸§ AA 55 00 XX FB å°±æŠŠ XX æ”¾åˆ°è¿™é‡Œ */
 volatile uint8_t g_gif_cmd = 0;
-volatile uint8_t g_gif_cmd_flag = 0;   /* =1 ±íÊ¾ÓĞĞÂÃüÁî */
+volatile uint8_t g_gif_cmd_flag = 0;   /* =1 è¡¨ç¤ºæœ‰æ–°å‘½ä»¤ */
 
 
 
-/*----------------- GIF ¿½±´ÓÃÈ«¾Ö»º³å£¬±ÜÃâÕ¼ÓÃÕ» -----------------*/
+/*----------------- GIF æ‹·è´ç”¨å…¨å±€ç¼“å†²ï¼Œé¿å…å ç”¨æ ˆ -----------------*/
 #define GIF_COPY_BUF_SIZE   4096
 
-static uint8_t g_gif_copy_buf[GIF_COPY_BUF_SIZE];   // ·ÅÔÚ BSS£¬È«¾Ö±äÁ¿
+static uint8_t g_gif_copy_buf[GIF_COPY_BUF_SIZE];   // æ”¾åœ¨ BSSï¼Œå…¨å±€å˜é‡
 
 
 static uint8_t is_gif_file(const char *name)
@@ -135,36 +135,36 @@ static uint16_t get_gif_count(const char *path)
     return cnt;
 }
 
-/* ÅĞ¶Ï dst_path ÊÇ·ñĞèÒª´Ó src_info ¶ÔÓ¦µÄÎÄ¼ş¸üĞÂ
- * ·µ»Ø 1 = ĞèÒª¿½±´/¸²¸Ç
- *       0 = ¿ÉÒÔÌø¹ı£¨ÎÄ¼ş´æÔÚÇÒ´óĞ¡&Ê±¼ä¶¼Ò»Ñù£©
+/* åˆ¤æ–­ dst_path æ˜¯å¦éœ€è¦ä» src_info å¯¹åº”çš„æ–‡ä»¶æ›´æ–°
+ * è¿”å› 1 = éœ€è¦æ‹·è´/è¦†ç›–
+ *       0 = å¯ä»¥è·³è¿‡ï¼ˆæ–‡ä»¶å­˜åœ¨ä¸”å¤§å°&æ—¶é—´éƒ½ä¸€æ ·ï¼‰
  */
 static uint8_t need_update_file(const char *dst_path, const FILINFO *src_info)
 {
     FILINFO dst_info;
     FRESULT res;
 
-    /* ²éÒ»ÏÂ 1:/PICTURE ÀïÊÇ·ñÒÑ¾­ÓĞÕâ¸öÎÄ¼ş */
+    /* æŸ¥ä¸€ä¸‹ 1:/PICTURE é‡Œæ˜¯å¦å·²ç»æœ‰è¿™ä¸ªæ–‡ä»¶ */
     res = f_stat(dst_path, &dst_info);
     if (res != FR_OK)
     {
-        /* ²é²»µ½£¬ËµÃ÷²»´æÔÚ -> ±ØĞë¿½ */
+        /* æŸ¥ä¸åˆ°ï¼Œè¯´æ˜ä¸å­˜åœ¨ -> å¿…é¡»æ‹· */
         return 1;
     }
 
-    /* 1) ÏÈ¿´ÎÄ¼ş´óĞ¡ */
+    /* 1) å…ˆçœ‹æ–‡ä»¶å¤§å° */
     if (dst_info.fsize != src_info->fsize)
     {
-        return 1;   /* ´óĞ¡²»Ò»Ñù£¬ËµÃ÷ÄÚÈİ¿Ï¶¨±äÁË */
+        return 1;   /* å¤§å°ä¸ä¸€æ ·ï¼Œè¯´æ˜å†…å®¹è‚¯å®šå˜äº† */
     }
 
-    /* ´óĞ¡ÏàÍ¬¡¢ÈÕÆÚÏàÍ¬£¬¾ÍÈÏÎªÃ»±ä£¬Ìø¹ı */
+    /* å¤§å°ç›¸åŒã€æ—¥æœŸç›¸åŒï¼Œå°±è®¤ä¸ºæ²¡å˜ï¼Œè·³è¿‡ */
     return 0;
 }
 
 
-/* ´Ó SD ¿¨ 0:/PICTURE Í¬²½ËùÓĞ GIF µ½ W25Q256 µÄ 1:/PICTURE
- * Ö»¸üĞÂ¡°ĞÂÔö/ÓĞ±ä»¯¡±µÄÎÄ¼ş£¬´óĞ¡ & Ê±¼äÍêÈ«Ò»ÑùµÄÎÄ¼şÖ±½ÓÌø¹ı¡£
+/* ä» SD å¡ 0:/PICTURE åŒæ­¥æ‰€æœ‰ GIF åˆ° W25Q256 çš„ 1:/PICTURE
+ * åªæ›´æ–°â€œæ–°å¢/æœ‰å˜åŒ–â€çš„æ–‡ä»¶ï¼Œå¤§å° & æ—¶é—´å®Œå…¨ä¸€æ ·çš„æ–‡ä»¶ç›´æ¥è·³è¿‡ã€‚
  */
 void copy_gif_to_flash(void)
 {
@@ -177,36 +177,36 @@ void copy_gif_to_flash(void)
     char path_sd[64];
     char path_flash[64];
 
-    uint16_t total;          // GIF ×ÜÊı
-    uint16_t index = 0;      // µ±Ç°ÊÇµÚ¼¸ÕÅ
+    uint16_t total;          // GIF æ€»æ•°
+    uint16_t index = 0;      // å½“å‰æ˜¯ç¬¬å‡ å¼ 
 
-    uint32_t total_size;     // µ±Ç°ÕâÕÅµÄ×Ü×Ö½ÚÊı
-    uint32_t copied;         // ÒÑ¿½×Ö½Ú
-    uint32_t last_report;    // ÉÏ´Î´òÓ¡½ø¶ÈµÄÎ»ÖÃ
+    uint32_t total_size;     // å½“å‰è¿™å¼ çš„æ€»å­—èŠ‚æ•°
+    uint32_t copied;         // å·²æ‹·å­—èŠ‚
+    uint32_t last_report;    // ä¸Šæ¬¡æ‰“å°è¿›åº¦çš„ä½ç½®
 
-    /* 1. Í³¼Æ 0:/PICTURE ÖĞ GIF ¸öÊı */
+    /* 1. ç»Ÿè®¡ 0:/PICTURE ä¸­ GIF ä¸ªæ•° */
     total = get_gif_count("0:/PICTURE");
     if (total == 0)
     {
 #ifdef EMO_DEBUG
-        printf("0:/PICTURE ÖĞÃ»ÓĞ GIF ÎÄ¼ş\r\n");
+        printf("0:/PICTURE ä¸­æ²¡æœ‰ GIF æ–‡ä»¶\r\n");
 #endif
         return;
     }
 
 #ifdef EMO_DEBUG
-    printf("×¼±¸Í¬²½ %d ¸ö GIF µ½ 1:/PICTURE£¨Ö»¸üĞÂÓĞ±ä»¯µÄ£©\r\n", total);
+    printf("å‡†å¤‡åŒæ­¥ %d ä¸ª GIF åˆ° 1:/PICTUREï¼ˆåªæ›´æ–°æœ‰å˜åŒ–çš„ï¼‰\r\n", total);
 #endif
 
-    /* 2. È·±£ 1:/PICTURE Ä¿Â¼´æÔÚ£¨Ã»ÓĞ¾Í½¨£¬ÓĞ¾ÍÊ²Ã´Ò²²»×ö£© */
+    /* 2. ç¡®ä¿ 1:/PICTURE ç›®å½•å­˜åœ¨ï¼ˆæ²¡æœ‰å°±å»ºï¼Œæœ‰å°±ä»€ä¹ˆä¹Ÿä¸åšï¼‰ */
     f_mkdir("1:/PICTURE");
 
-    /* 3. ´ò¿ª 0:/PICTURE Ä¿Â¼£¬¿ªÊ¼Öğ¸ö´¦Àí */
+    /* 3. æ‰“å¼€ 0:/PICTURE ç›®å½•ï¼Œå¼€å§‹é€ä¸ªå¤„ç† */
     res = f_opendir(&dir, "0:/PICTURE");
     if (res != FR_OK)
     {
 #ifdef EMO_DEBUG
-        printf("copy_gif_to_flash: ´ò¿ª 0:/PICTURE Ê§°Ü, res=%d\r\n", res);
+        printf("copy_gif_to_flash: æ‰“å¼€ 0:/PICTURE å¤±è´¥, res=%d\r\n", res);
 #endif
         return;
     }
@@ -216,15 +216,15 @@ void copy_gif_to_flash(void)
         res = f_readdir(&dir, &info);
         if (res != FR_OK || info.fname[0] == 0)
         {
-            /* ³ö´í»ò¶Áµ½Ä©Î² */
+            /* å‡ºé”™æˆ–è¯»åˆ°æœ«å°¾ */
             break;
         }
 
-        /* Ìø¹ı×ÓÄ¿Â¼ */
+        /* è·³è¿‡å­ç›®å½• */
         if (info.fattrib & AM_DIR)
             continue;
 
-        /* Ö»´¦Àí .GIF/.gif */
+        /* åªå¤„ç† .GIF/.gif */
         if (!(strstr(info.fname, ".GIF") || strstr(info.fname, ".gif")))
             continue;
 
@@ -233,14 +233,14 @@ void copy_gif_to_flash(void)
         snprintf(path_sd,    sizeof(path_sd),    "0:/PICTURE/%s", info.fname);
         snprintf(path_flash, sizeof(path_flash), "1:/PICTURE/%s", info.fname);
 
-        /* ÏÈÅĞ¶ÏÄ¿±êÎÄ¼şÊÇ·ñĞèÒª¸üĞÂ£¨²»´æÔÚ / ´óĞ¡±äÁË / Ê±¼ä±äÁË£© */
+        /* å…ˆåˆ¤æ–­ç›®æ ‡æ–‡ä»¶æ˜¯å¦éœ€è¦æ›´æ–°ï¼ˆä¸å­˜åœ¨ / å¤§å°å˜äº† / æ—¶é—´å˜äº†ï¼‰ */
         if (!need_update_file(path_flash, &info))
         {
 #ifdef EMO_DEBUG
-            printf("[%d/%d] %s ÒÑÊÇ×îĞÂ£¬Ìø¹ı\r\n",
+            printf("[%d/%d] %s å·²æ˜¯æœ€æ–°ï¼Œè·³è¿‡\r\n",
                    index, total, path_flash);
 #endif
-            continue;   /* Õâ¸öÎÄ¼ş²»¿½ÁË£¬´¦ÀíÏÂÒ»¸ö */
+            continue;   /* è¿™ä¸ªæ–‡ä»¶ä¸æ‹·äº†ï¼Œå¤„ç†ä¸‹ä¸€ä¸ª */
         }
 
         total_size  = info.fsize;
@@ -248,44 +248,44 @@ void copy_gif_to_flash(void)
         last_report = 0;
 
 #ifdef EMO_DEBUG
-        printf("\r\n[%d/%d] %s -> %s  ´óĞ¡:%lu KB £¨Ğè¸üĞÂ£©\r\n",
+        printf("\r\n[%d/%d] %s -> %s  å¤§å°:%lu KB ï¼ˆéœ€æ›´æ–°ï¼‰\r\n",
                index, total,
                path_sd, path_flash,
                (unsigned long)(info.fsize / 1024));
 #endif
 
-        /* ---- ´ò¿ªÔ´ÎÄ¼ş (SD ¿¨) ---- */
+        /* ---- æ‰“å¼€æºæ–‡ä»¶ (SD å¡) ---- */
         res = f_open(&src, path_sd, FA_READ);
         if (res != FR_OK)
         {
 #ifdef EMO_DEBUG
-            printf("  ´ò¿ªÔ´ÎÄ¼şÊ§°Ü, Ìø¹ı´ËÎÄ¼ş, res=%d\r\n", res);
+            printf("  æ‰“å¼€æºæ–‡ä»¶å¤±è´¥, è·³è¿‡æ­¤æ–‡ä»¶, res=%d\r\n", res);
 #endif
             continue;
         }
 
-        /* ---- ´ò¿ªÄ¿±êÎÄ¼ş (1:/£¬NORFLASH) ----
-         * ÕâÀïÖ±½ÓÓÃ CREATE_ALWAYS£ºÃ¿´Î¶¼ÍêÕû¸²¸ÇĞ´£¬
-         * ±£Ö¤ÄÚÈİÓë SD ¿¨±£³ÖÒ»ÖÂ¡£
+        /* ---- æ‰“å¼€ç›®æ ‡æ–‡ä»¶ (1:/ï¼ŒNORFLASH) ----
+         * è¿™é‡Œç›´æ¥ç”¨ CREATE_ALWAYSï¼šæ¯æ¬¡éƒ½å®Œæ•´è¦†ç›–å†™ï¼Œ
+         * ä¿è¯å†…å®¹ä¸ SD å¡ä¿æŒä¸€è‡´ã€‚
          */
         res = f_open(&dst, path_flash, FA_CREATE_ALWAYS | FA_WRITE);
         if (res != FR_OK)
         {
 #ifdef EMO_DEBUG
-            printf("  ´ò¿ªÄ¿±êÎÄ¼şÊ§°Ü, Ìø¹ı´ËÎÄ¼ş, res=%d\r\n", res);
+            printf("  æ‰“å¼€ç›®æ ‡æ–‡ä»¶å¤±è´¥, è·³è¿‡æ­¤æ–‡ä»¶, res=%d\r\n", res);
 #endif
             f_close(&src);
             continue;
         }
 
-        /* ---- ÕæÕıµÄ¿½±´Ñ­»· ---- */
+        /* ---- çœŸæ­£çš„æ‹·è´å¾ªç¯ ---- */
         while (1)
         {
             res = f_read(&src, g_gif_copy_buf, GIF_COPY_BUF_SIZE, &br);
             if (res != FR_OK)
             {
 #ifdef EMO_DEBUG
-                printf("  f_read ³ö´í, res=%d\r\n", res);
+                printf("  f_read å‡ºé”™, res=%d\r\n", res);
 #endif
                 break;
             }
@@ -293,7 +293,7 @@ void copy_gif_to_flash(void)
             if (br == 0)
             {
 #ifdef EMO_DEBUG
-                printf("  ¶Áµ½ÎÄ¼şÄ©Î²\r\n");
+                printf("  è¯»åˆ°æ–‡ä»¶æœ«å°¾\r\n");
 #endif
                 break;
             }
@@ -302,18 +302,18 @@ void copy_gif_to_flash(void)
             if (res != FR_OK || bw < br)
             {
 #ifdef EMO_DEBUG
-                printf("  f_write ³ö´í, res=%d, bw=%u\r\n", res, bw);
+                printf("  f_write å‡ºé”™, res=%d, bw=%u\r\n", res, bw);
 #endif
                 break;
             }
 
             copied += br;
 
-            /* Ã¿ 32KB »ò×îºóÒ»´Î´òÓ¡Ò»´Î½ø¶È */
+            /* æ¯ 32KB æˆ–æœ€åä¸€æ¬¡æ‰“å°ä¸€æ¬¡è¿›åº¦ */
             if (copied - last_report >= 32 * 1024 || copied == total_size)
             {
 #ifdef EMO_DEBUG
-                printf("  ÒÑ¿½ %lu / %lu KB\r\n",
+                printf("  å·²æ‹· %lu / %lu KB\r\n",
                        (unsigned long)(copied / 1024),
                        (unsigned long)(total_size / 1024));
 #endif
@@ -327,7 +327,7 @@ void copy_gif_to_flash(void)
 
     f_closedir(&dir);
 #ifdef EMO_DEBUG
-    printf("GIF Í¬²½Íê³É\r\n");
+    printf("GIF åŒæ­¥å®Œæˆ\r\n");
 #endif
 }
 
@@ -335,26 +335,26 @@ void copy_gif_to_flash(void)
 void flash_picture_first_init(void)
 {
 #ifdef EMO_DEBUG
-    printf("Ö´ĞĞ flash_picture_first_init£ºÍ¬²½ 0:/PICTURE -> 1:/PICTURE£¨ÔöÁ¿¸üĞÂ£©\r\n");
+    printf("æ‰§è¡Œ flash_picture_first_initï¼šåŒæ­¥ 0:/PICTURE -> 1:/PICTUREï¼ˆå¢é‡æ›´æ–°ï¼‰\r\n");
 #endif
 
-    /* ²»ÔÙÅĞ¶ÏÊÇ²»ÊÇ¡°µÚÒ»´ÎÊ¹ÓÃ¡±£¬
-       Ã¿´ÎÉÏµç¶¼ÅÜÒ»±éÔöÁ¿Í¬²½Âß¼­¼´¿É¡£
-       µÚÒ»´ÎÊ± 1:/PICTURE ²»´æÔÚ£¬copy_gif_to_flash Àï»á f_mkdir ²¢°ÑËùÓĞÎÄ¼ş¿½½øÈ¥£»
-       Ö®ºóÔÙÉÏµç£¬Ö»¸üĞÂÓĞ±ä»¯µÄÎÄ¼ş¡£ */
+    /* ä¸å†åˆ¤æ–­æ˜¯ä¸æ˜¯â€œç¬¬ä¸€æ¬¡ä½¿ç”¨â€ï¼Œ
+       æ¯æ¬¡ä¸Šç”µéƒ½è·‘ä¸€éå¢é‡åŒæ­¥é€»è¾‘å³å¯ã€‚
+       ç¬¬ä¸€æ¬¡æ—¶ 1:/PICTURE ä¸å­˜åœ¨ï¼Œcopy_gif_to_flash é‡Œä¼š f_mkdir å¹¶æŠŠæ‰€æœ‰æ–‡ä»¶æ‹·è¿›å»ï¼›
+       ä¹‹åå†ä¸Šç”µï¼Œåªæ›´æ–°æœ‰å˜åŒ–çš„æ–‡ä»¶ã€‚ */
     copy_gif_to_flash();
 }
 
 
 
-/* É¾³ı 1:/PICTURE Ä¿Â¼ÏÂµÄËùÓĞÎÄ¼ş£¬²¢°ÑÄ¿Â¼±¾ÉíÒ²É¾µô */
+/* åˆ é™¤ 1:/PICTURE ç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶ï¼Œå¹¶æŠŠç›®å½•æœ¬èº«ä¹Ÿåˆ æ‰ */
 void clear_flash_pictures(void)
 {
     DIR dir;
     FILINFO info;
     char path[64];
 
-    /* ÏÈ³¢ÊÔ´ò¿ªÄ¿Â¼ */
+    /* å…ˆå°è¯•æ‰“å¼€ç›®å½• */
     if (f_opendir(&dir, "1:/PICTURE") != FR_OK)
         return;
 
@@ -363,32 +363,32 @@ void clear_flash_pictures(void)
         if (f_readdir(&dir, &info) != FR_OK || info.fname[0] == 0)
             break;
 
-        if (info.fname[0] == '.')        /* Ìø¹ı . ºÍ .. */
+        if (info.fname[0] == '.')        /* è·³è¿‡ . å’Œ .. */
             continue;
 
         sprintf(path, "1:/PICTURE/%s", info.fname);
-        f_unlink(path);                  /* É¾³ıÎÄ¼ş */
+        f_unlink(path);                  /* åˆ é™¤æ–‡ä»¶ */
     }
     f_closedir(&dir);
 
-    /* °Ñ¿ÕÄ¿Â¼±¾ÉíÉ¾µô */
+    /* æŠŠç©ºç›®å½•æœ¬èº«åˆ æ‰ */
     f_unlink("1:/PICTURE");
 }
 
 #ifdef EMO_DEBUG
-/* µ÷ÊÔÓÃ£ºÁĞ³ö SD ¿¨ 0:/ ¸ùÄ¿Â¼ÏÂµÄÎÄ¼şºÍÄ¿Â¼ */
+/* è°ƒè¯•ç”¨ï¼šåˆ—å‡º SD å¡ 0:/ æ ¹ç›®å½•ä¸‹çš„æ–‡ä»¶å’Œç›®å½• */
 void debug_list_sd_root(void)
 {
     DIR dir;
     FILINFO info;
     FRESULT res;
 
-    printf("ÁĞ³ö 0:/ ¸ùÄ¿Â¼ÄÚÈİ:\r\n");
+    printf("åˆ—å‡º 0:/ æ ¹ç›®å½•å†…å®¹:\r\n");
 
     res = f_opendir(&dir, "0:/");
     if (res != FR_OK)
     {
-        printf("  ´ò¿ª 0:/ Ê§°Ü, res=%d\r\n", res);
+        printf("  æ‰“å¼€ 0:/ å¤±è´¥, res=%d\r\n", res);
         return;
     }
 
@@ -405,57 +405,59 @@ void debug_list_sd_root(void)
     }
 
     f_closedir(&dir);
-    printf("0:/ ÁĞ±í½áÊø\r\n");
+    printf("0:/ åˆ—è¡¨ç»“æŸ\r\n");
 }
 
 #endif
 
 /**
- * @brief       µÃµ½pathÂ·¾¶ÏÂ,Ä¿±êÎÄ¼şµÄ×Ü¸öÊı
- * @param       path : Â·¾¶
- * @retval      ×ÜÓĞĞ§ÎÄ¼şÊı
+ * @brief       å¾—åˆ°pathè·¯å¾„ä¸‹,ç›®æ ‡æ–‡ä»¶çš„æ€»ä¸ªæ•°
+ * @param       path : è·¯å¾„
+ * @retval      æ€»æœ‰æ•ˆæ–‡ä»¶æ•°
  */
 uint16_t pic_get_tnum(char *path)
 {
     uint8_t res;
     uint16_t rval = 0;
-    DIR tdir;                                                 /* ÁÙÊ±Ä¿Â¼ */
-    FILINFO *tfileinfo;                                       /* ÁÙÊ±ÎÄ¼şĞÅÏ¢ */
-    tfileinfo = (FILINFO *)mymalloc(SRAMIN, sizeof(FILINFO)); /* ÉêÇëÄÚ´æ */
-    res = f_opendir(&tdir, (const TCHAR *)path);              /* ´ò¿ªÄ¿Â¼ */
+    DIR tdir;                                                 /* ä¸´æ—¶ç›®å½• */
+    FILINFO *tfileinfo;                                       /* ä¸´æ—¶æ–‡ä»¶ä¿¡æ¯ */
+    tfileinfo = (FILINFO *)mymalloc(SRAMIN, sizeof(FILINFO)); /* ç”³è¯·å†…å­˜ */
+    res = f_opendir(&tdir, (const TCHAR *)path);              /* æ‰“å¼€ç›®å½• */
 
     if (res == FR_OK && tfileinfo)
     {
-        while (1)                                             /* ²éÑ¯×ÜµÄÓĞĞ§ÎÄ¼şÊı */
+        while (1)                                             /* æŸ¥è¯¢æ€»çš„æœ‰æ•ˆæ–‡ä»¶æ•° */
         {
-            res = f_readdir(&tdir, tfileinfo);                /* ¶ÁÈ¡Ä¿Â¼ÏÂµÄÒ»¸öÎÄ¼ş */
+            res = f_readdir(&tdir, tfileinfo);                /* è¯»å–ç›®å½•ä¸‹çš„ä¸€ä¸ªæ–‡ä»¶ */
 
             if (res != FR_OK || tfileinfo->fname[0] == 0)
             {
-                break;                                        /* ´íÎóÁË/µ½Ä©Î²ÁË,ÍË³ö */
+                break;                                        /* é”™è¯¯äº†/åˆ°æœ«å°¾äº†,é€€å‡º */
             }
 
             res = exfuns_file_type(tfileinfo -> fname);
 
-            if ((res & 0XF0) == 0X50)                         /* È¡¸ßËÄÎ»,¿´¿´ÊÇ²»ÊÇÍ¼Æ¬ÎÄ¼ş */
+            if ((res & 0XF0) == 0X50)                         /* å–é«˜å››ä½,çœ‹çœ‹æ˜¯ä¸æ˜¯å›¾ç‰‡æ–‡ä»¶ */
             {
-                rval++;                                       /* ÓĞĞ§ÎÄ¼şÊıÔö¼Ó1 */
+                rval++;                                       /* æœ‰æ•ˆæ–‡ä»¶æ•°å¢åŠ 1 */
             }
         }
     }
 
-    myfree(SRAMIN, tfileinfo);                                /* ÊÍ·ÅÄÚ´æ */
+    ltdc_set_draw_buffer(ltdc_get_back_buffer());
+    ltdc_flip_buffers();
+    myfree(SRAMIN, tfileinfo);                                /* é‡Šæ”¾å†…å­˜ */
     return rval;
 }
 
-/* ¸ù¾İ code ÏÔÊ¾±íÇé GIF */
+/* æ ¹æ® code æ˜¾ç¤ºè¡¨æƒ… GIF */
 static void show_emotion_by_code(uint8_t code)
 {
     const char *name = gif_get_name_by_code(code);
     if (name == NULL)
     {
 #ifdef EMO_DEBUG
-        printf("Î´Öª±íÇé code=0x%02X£¨Î´ÔÚ g_gif_map ÖĞÅäÖÃ£©\r\n", code);
+        printf("æœªçŸ¥è¡¨æƒ… code=0x%02Xï¼ˆæœªåœ¨ g_gif_map ä¸­é…ç½®ï¼‰\r\n", code);
 #endif        
 				return;
     }
@@ -463,9 +465,9 @@ static void show_emotion_by_code(uint8_t code)
     char fullpath[64];
     sprintf(fullpath, "1:/PICTURE/%s", name);
 #ifdef EMO_DEBUG
-    printf("ÏÔÊ¾±íÇé code=0x%02X, ÎÄ¼ş=%s\r\n", code, fullpath);
+    printf("æ˜¾ç¤ºè¡¨æƒ… code=0x%02X, æ–‡ä»¶=%s\r\n", code, fullpath);
 #endif   
-//    lcd_clear(BLACK);			//Ä¿Ç°¸²¸ÇÈ«ÆÁµÄÍ¼Æ¬£¬²»½øĞĞÇåÆÁĞ§¹û¸üºÃ
+//    lcd_clear(BLACK);			//ç›®å‰è¦†ç›–å…¨å±çš„å›¾ç‰‡ï¼Œä¸è¿›è¡Œæ¸…å±æ•ˆæœæ›´å¥½
     piclib_ai_load_picfile(fullpath, 0, 0, lcddev.width, lcddev.height, 1);//
 }
 
@@ -474,170 +476,170 @@ static void show_emotion_by_code(uint8_t code)
 int main(void)
 {
     uint8_t res;
-    DIR picdir;                                  /* Í¼Æ¬Ä¿Â¼ */
-    FILINFO *picfileinfo;                        /* ÎÄ¼şĞÅÏ¢ */
-    char *pname;                                 /* ´øÂ·¾¶µÄÎÄ¼şÃû */
-    uint16_t totpicnum;                          /* Í¼Æ¬ÎÄ¼ş×ÜÊı */
-    uint16_t curindex;                           /* Í¼Æ¬µ±Ç°Ë÷Òı */
-    uint8_t key;                                 /* ¼üÖµ */
-    uint8_t pause = 0;                           /* ÔİÍ£±ê¼Ç */
+    DIR picdir;                                  /* å›¾ç‰‡ç›®å½• */
+    FILINFO *picfileinfo;                        /* æ–‡ä»¶ä¿¡æ¯ */
+    char *pname;                                 /* å¸¦è·¯å¾„çš„æ–‡ä»¶å */
+    uint16_t totpicnum;                          /* å›¾ç‰‡æ–‡ä»¶æ€»æ•° */
+    uint16_t curindex;                           /* å›¾ç‰‡å½“å‰ç´¢å¼• */
+    uint8_t key;                                 /* é”®å€¼ */
+    uint8_t pause = 0;                           /* æš‚åœæ ‡è®° */
     uint8_t t;
     uint16_t temp;
-    uint32_t *picoffsettbl;                      /* Í¼Æ¬ÎÄ¼şoffsetË÷Òı±í */
+    uint32_t *picoffsettbl;                      /* å›¾ç‰‡æ–‡ä»¶offsetç´¢å¼•è¡¨ */
 
-    sys_cache_enable();                          /* ´ò¿ªL1-Cache */
-    HAL_Init();                                  /* ³õÊ¼»¯HAL¿â */
-    sys_stm32_clock_init(160, 5, 2, 4);          /* ÉèÖÃÊ±ÖÓ, 400Mhz */
-    delay_init(400);                             /* ÑÓÊ±³õÊ¼»¯ */
-    usart_init(115200);                          /* ´®¿Ú³õÊ¼»¯ */
-    usmart_init(200);                            /* ³õÊ¼»¯USMART */
-    mpu_memory_protection();                     /* ±£»¤Ïà¹Ø´æ´¢ÇøÓò */
-    led_init();                                  /* ³õÊ¼»¯LED */
-    key_init();                                  /* ³õÊ¼»¯KEY */
-    sdram_init();                                /* ³õÊ¼»¯SDRAM */
-    lcd_init();                                  /* ³õÊ¼»¯LCD */
-    my_mem_init(SRAMIN);                         /* ³õÊ¼»¯ÄÚ²¿ÄÚ´æ³Ø(AXI) */
-    my_mem_init(SRAMEX);                         /* ³õÊ¼»¯Íâ²¿ÄÚ´æ³Ø(SDRAM) */
-    my_mem_init(SRAM12);                         /* ³õÊ¼»¯SRAM12ÄÚ´æ³Ø(SRAM1+SRAM2) */
-    my_mem_init(SRAM4);                          /* ³õÊ¼»¯SRAM4ÄÚ´æ³Ø(SRAM4) */
-    my_mem_init(SRAMDTCM);                       /* ³õÊ¼»¯DTCMÄÚ´æ³Ø(DTCM) */
-    my_mem_init(SRAMITCM);                       /* ³õÊ¼»¯ITCMÄÚ´æ³Ø(ITCM) */
+    sys_cache_enable();                          /* æ‰“å¼€L1-Cache */
+    HAL_Init();                                  /* åˆå§‹åŒ–HALåº“ */
+    sys_stm32_clock_init(160, 5, 2, 4);          /* è®¾ç½®æ—¶é’Ÿ, 400Mhz */
+    delay_init(400);                             /* å»¶æ—¶åˆå§‹åŒ– */
+    usart_init(115200);                          /* ä¸²å£åˆå§‹åŒ– */
+    usmart_init(200);                            /* åˆå§‹åŒ–USMART */
+    mpu_memory_protection();                     /* ä¿æŠ¤ç›¸å…³å­˜å‚¨åŒºåŸŸ */
+    led_init();                                  /* åˆå§‹åŒ–LED */
+    key_init();                                  /* åˆå§‹åŒ–KEY */
+    sdram_init();                                /* åˆå§‹åŒ–SDRAM */
+    lcd_init();                                  /* åˆå§‹åŒ–LCD */
+    my_mem_init(SRAMIN);                         /* åˆå§‹åŒ–å†…éƒ¨å†…å­˜æ± (AXI) */
+    my_mem_init(SRAMEX);                         /* åˆå§‹åŒ–å¤–éƒ¨å†…å­˜æ± (SDRAM) */
+    my_mem_init(SRAM12);                         /* åˆå§‹åŒ–SRAM12å†…å­˜æ± (SRAM1+SRAM2) */
+    my_mem_init(SRAM4);                          /* åˆå§‹åŒ–SRAM4å†…å­˜æ± (SRAM4) */
+    my_mem_init(SRAMDTCM);                       /* åˆå§‹åŒ–DTCMå†…å­˜æ± (DTCM) */
+    my_mem_init(SRAMITCM);                       /* åˆå§‹åŒ–ITCMå†…å­˜æ± (ITCM) */
     
-    exfuns_init();                               /* ÎªfatfsÏà¹Ø±äÁ¿ÉêÇëÄÚ´æ */
-    f_mount(fs[0], "0:", 1);                     /* ¹ÒÔØSD¿¨ */
-    f_mount(fs[1], "1:", 1);                     /* ¹ÒÔØSPI FLASH */
-    f_mount(fs[2], "2:", 1);                     /* ¹ÒÔØNAND FLASH */
+    exfuns_init();                               /* ä¸ºfatfsç›¸å…³å˜é‡ç”³è¯·å†…å­˜ */
+    f_mount(fs[0], "0:", 1);                     /* æŒ‚è½½SDå¡ */
+    f_mount(fs[1], "1:", 1);                     /* æŒ‚è½½SPI FLASH */
+    f_mount(fs[2], "2:", 1);                     /* æŒ‚è½½NAND FLASH */
 		
 		
-//		/* ¡ï¡ï¡ï ÏÂÔØÍ¼Æ¬ ¡ï¡ï¡ï */
+//		/* â˜…â˜…â˜… ä¸‹è½½å›¾ç‰‡ â˜…â˜…â˜… */
 //		clear_flash_pictures();
-//    flash_picture_first_init();                  /* Èç¹ûÊÇµÚÒ»´Î, ¾Í°Ñ0:/PICTURE ¿½µ½ 1:/PICTURE */
+//    flash_picture_first_init();                  /* å¦‚æœæ˜¯ç¬¬ä¸€æ¬¡, å°±æŠŠ0:/PICTURE æ‹·åˆ° 1:/PICTURE */
 
-    while (fonts_init())                         /* ¼ì²é×Ö¿â */
+    while (fonts_init())                         /* æ£€æŸ¥å­—åº“ */
     {
         lcd_show_string(30, 50, 200, 16, 16, "Font Error!", RED);
         delay_ms(200);
-        lcd_fill(30, 50, 240, 66, WHITE);        /* Çå³ıÏÔÊ¾ */
+        lcd_fill(30, 50, 240, 66, WHITE);        /* æ¸…é™¤æ˜¾ç¤º */
         delay_ms(200);
     }
 
-    text_show_string(30, 50, 200, 16, "ÕıµãÔ­×ÓSTM32¿ª·¢°å",16,0, RED);
-    text_show_string(30, 70, 200, 16, "Ó²¼şJPEG½âÂë ÊµÑé", 16, 0, RED);
-    text_show_string(30, 90, 200, 16, "ÕıµãÔ­×Ó@ALIENTEK", 16, 0, RED);
+    text_show_string(30, 50, 200, 16, "æ­£ç‚¹åŸå­STM32å¼€å‘æ¿",16,0, RED);
+    text_show_string(30, 70, 200, 16, "ç¡¬ä»¶JPEGè§£ç  å®éªŒ", 16, 0, RED);
+    text_show_string(30, 90, 200, 16, "æ­£ç‚¹åŸå­@ALIENTEK", 16, 0, RED);
     text_show_string(30, 110, 200, 16, "KEY0:NEXT KEY1:PREV", 16, 0, RED);
     text_show_string(30, 130, 200, 16, "KEY_UP:PAUSE:", 16, 0, RED);
 
-    while (f_opendir(&picdir, "1:/PICTURE"))                                /* ´ò¿ªÍ¼Æ¬ÎÄ¼ş¼Ğ */
+    while (f_opendir(&picdir, "1:/PICTURE"))                                /* æ‰“å¼€å›¾ç‰‡æ–‡ä»¶å¤¹ */
     {
-        text_show_string(30, 150, 240, 16, "PICTUREÎÄ¼ş¼Ğ´íÎó!", 16, 0, RED);
+        text_show_string(30, 150, 240, 16, "PICTUREæ–‡ä»¶å¤¹é”™è¯¯!", 16, 0, RED);
         delay_ms(200);
-        lcd_fill(30, 150, 240, 186, WHITE);                                 /* Çå³ıÏÔÊ¾ */
+        lcd_fill(30, 150, 240, 186, WHITE);                                 /* æ¸…é™¤æ˜¾ç¤º */
         delay_ms(200);
     }
 
-    totpicnum = pic_get_tnum("1:/PICTURE");                                 /* µÃµ½×ÜÓĞĞ§ÎÄ¼şÊı */
+    totpicnum = pic_get_tnum("1:/PICTURE");                                 /* å¾—åˆ°æ€»æœ‰æ•ˆæ–‡ä»¶æ•° */
 
     
-    while (totpicnum == NULL)                                               /* Í¼Æ¬ÎÄ¼şÎª0 */
+    while (totpicnum == NULL)                                               /* å›¾ç‰‡æ–‡ä»¶ä¸º0 */
     {
-        text_show_string(30, 150, 240, 16, "Ã»ÓĞÍ¼Æ¬ÎÄ¼ş!", 16, 0, RED);
+        text_show_string(30, 150, 240, 16, "æ²¡æœ‰å›¾ç‰‡æ–‡ä»¶!", 16, 0, RED);
         delay_ms(200);
-        lcd_fill(30, 150, 240, 186, WHITE);                                 /* Çå³ıÏÔÊ¾ */
+        lcd_fill(30, 150, 240, 186, WHITE);                                 /* æ¸…é™¤æ˜¾ç¤º */
         delay_ms(200);
     }
     
-    picfileinfo = (FILINFO *)mymalloc(SRAMIN, sizeof(FILINFO));             /* ÉêÇëÄÚ´æ */
-    pname = mymalloc(SRAMIN, FF_MAX_LFN * 2 + 1);                           /* Îª´øÂ·¾¶µÄÎÄ¼şÃû·ÖÅäÄÚ´æ */
-    picoffsettbl = mymalloc(SRAMIN, 4 * totpicnum);                         /* ÉêÇë4*totpicnum¸ö×Ö½ÚµÄÄÚ´æ,ÓÃÓÚ´æ·ÅÍ¼Æ¬Ë÷Òı */
+    picfileinfo = (FILINFO *)mymalloc(SRAMIN, sizeof(FILINFO));             /* ç”³è¯·å†…å­˜ */
+    pname = mymalloc(SRAMIN, FF_MAX_LFN * 2 + 1);                           /* ä¸ºå¸¦è·¯å¾„çš„æ–‡ä»¶ååˆ†é…å†…å­˜ */
+    picoffsettbl = mymalloc(SRAMIN, 4 * totpicnum);                         /* ç”³è¯·4*totpicnumä¸ªå­—èŠ‚çš„å†…å­˜,ç”¨äºå­˜æ”¾å›¾ç‰‡ç´¢å¼• */
 
-    while (!picfileinfo || !pname || !picoffsettbl)                         /* ÄÚ´æ·ÖÅä³ö´í */
+    while (!picfileinfo || !pname || !picoffsettbl)                         /* å†…å­˜åˆ†é…å‡ºé”™ */
     {
-        text_show_string(30, 150, 240, 16, "ÄÚ´æ·ÖÅäÊ§°Ü!", 16, 0, RED);
+        text_show_string(30, 150, 240, 16, "å†…å­˜åˆ†é…å¤±è´¥!", 16, 0, RED);
         delay_ms(200);
-        lcd_fill(30, 150, 240, 186, WHITE);                                 /* Çå³ıÏÔÊ¾ */
+        lcd_fill(30, 150, 240, 186, WHITE);                                 /* æ¸…é™¤æ˜¾ç¤º */
         delay_ms(200);
     }
 
-    /* ¼ÇÂ¼Ë÷Òı */
-    res = f_opendir(&picdir, "1:/PICTURE");                                 /* ´ò¿ªÄ¿Â¼ */
+    /* è®°å½•ç´¢å¼• */
+    res = f_opendir(&picdir, "1:/PICTURE");                                 /* æ‰“å¼€ç›®å½• */
 
     if (res == FR_OK)
     {
-        curindex = 0;                                                       /* µ±Ç°Ë÷ÒıÎª0 */
+        curindex = 0;                                                       /* å½“å‰ç´¢å¼•ä¸º0 */
         
-        while (1)                                                           /* È«²¿²éÑ¯Ò»±é */
+        while (1)                                                           /* å…¨éƒ¨æŸ¥è¯¢ä¸€é */
         {
-            temp = picdir.dptr;                                             /* ¼ÇÂ¼µ±Ç°dptrÆ«ÒÆ */
-            res = f_readdir(&picdir, picfileinfo);                          /* ¶ÁÈ¡Ä¿Â¼ÏÂµÄÒ»¸öÎÄ¼ş */
+            temp = picdir.dptr;                                             /* è®°å½•å½“å‰dptråç§» */
+            res = f_readdir(&picdir, picfileinfo);                          /* è¯»å–ç›®å½•ä¸‹çš„ä¸€ä¸ªæ–‡ä»¶ */
 
             if (res != FR_OK || picfileinfo -> fname[0] == 0)
             {
-                break;                                                      /* ´íÎóÁË/µ½Ä©Î²ÁË,ÍË³ö */
+                break;                                                      /* é”™è¯¯äº†/åˆ°æœ«å°¾äº†,é€€å‡º */
             }
 
             res = exfuns_file_type(picfileinfo -> fname);
 
-            if ((res & 0XF0) == 0X50)                                       /* È¡¸ßËÄÎ»,¿´¿´ÊÇ²»ÊÇÍ¼Æ¬ÎÄ¼ş */
+            if ((res & 0XF0) == 0X50)                                       /* å–é«˜å››ä½,çœ‹çœ‹æ˜¯ä¸æ˜¯å›¾ç‰‡æ–‡ä»¶ */
             {
-                picoffsettbl[curindex] = temp;                              /* ¼ÇÂ¼Ë÷Òı */
+                picoffsettbl[curindex] = temp;                              /* è®°å½•ç´¢å¼• */
                 curindex++;
             }
         }
     }
 
-    text_show_string(30, 150, 240, 16, "¿ªÊ¼ÏÔÊ¾...", 16, 0, RED);
+    text_show_string(30, 150, 240, 16, "å¼€å§‹æ˜¾ç¤º...", 16, 0, RED);
     delay_ms(1500);
 		
 		
-		/* ³õÊ¼»¯»­Í¼ */
-    piclib_init();                                                           /* ³õÊ¼»¯»­Í¼ */
+		/* åˆå§‹åŒ–ç”»å›¾ */
+    piclib_init();                                                           /* åˆå§‹åŒ–ç”»å›¾ */
 
     lcd_clear(BLACK);
 		
-	  /* --------- ´®¿Ú±íÇéÑ­»·²¥·Å + ³¬Ê±»ØÍËÂß¼­ --------- */
+	  /* --------- ä¸²å£è¡¨æƒ…å¾ªç¯æ’­æ”¾ + è¶…æ—¶å›é€€é€»è¾‘ --------- */
 
-    const uint8_t DEFAULT_CODE = 0x09;           /* Ä¬ÈÏ±íÇé±àºÅ£¬¶ÔÓ¦ normal.gif */
-    uint8_t  play_code    = DEFAULT_CODE;        /* µ±Ç°ÒªÑ­»·²¥·ÅµÄ±íÇé */
-    uint32_t last_rx_tick = HAL_GetTick();       /* ÉÏÒ»´ÎÊÕµ½ÓĞĞ§Ö¸ÁîµÄÊ±¼ä´Á(ms) */
-    const uint32_t REVERT_MS = 5000;             /* 5s ³¬Ê±»ØÍË */
+    const uint8_t DEFAULT_CODE = 0x09;           /* é»˜è®¤è¡¨æƒ…ç¼–å·ï¼Œå¯¹åº” normal.gif */
+    uint8_t  play_code    = DEFAULT_CODE;        /* å½“å‰è¦å¾ªç¯æ’­æ”¾çš„è¡¨æƒ… */
+    uint32_t last_rx_tick = HAL_GetTick();       /* ä¸Šä¸€æ¬¡æ”¶åˆ°æœ‰æ•ˆæŒ‡ä»¤çš„æ—¶é—´æˆ³(ms) */
+    const uint32_t REVERT_MS = 5000;             /* 5s è¶…æ—¶å›é€€ */
 
     while (1)
     {
         uint32_t now = HAL_GetTick();
 
-        /* 1) ´¦Àí´®¿ÚĞÂÖ¸Áî£ºAA 55 00 XX FB */
+        /* 1) å¤„ç†ä¸²å£æ–°æŒ‡ä»¤ï¼šAA 55 00 XX FB */
         if (g_gif_cmd_flag)
         {
             uint8_t code = g_gif_cmd;
             g_gif_cmd_flag = 0;
 
-            last_rx_tick = now;      /* ¸üĞÂ¡°×î½üÒ»´ÎÖ¸ÁîÊ±¼ä¡± */
-            play_code    = code;     /* ¸üĞÂµ±Ç°Òª²¥·ÅµÄ±íÇé */
+            last_rx_tick = now;      /* æ›´æ–°â€œæœ€è¿‘ä¸€æ¬¡æŒ‡ä»¤æ—¶é—´â€ */
+            play_code    = code;     /* æ›´æ–°å½“å‰è¦æ’­æ”¾çš„è¡¨æƒ… */
 #ifdef EMO_DEBUG
-            printf("ÊÕµ½ĞÂ±íÇéÖ¸Áî code=0x%02X\r\n", code);
+            printf("æ”¶åˆ°æ–°è¡¨æƒ…æŒ‡ä»¤ code=0x%02X\r\n", code);
 #endif   
         }
 
-        /* 2) ³¬Ê±¼ì²â£º³¬¹ı REVERT_MS Î´ÊÕµ½ĞÂÖ¸Áî£¬»Øµ½Ä¬ÈÏ±íÇé */
+        /* 2) è¶…æ—¶æ£€æµ‹ï¼šè¶…è¿‡ REVERT_MS æœªæ”¶åˆ°æ–°æŒ‡ä»¤ï¼Œå›åˆ°é»˜è®¤è¡¨æƒ… */
         if ((now - last_rx_tick) > REVERT_MS)
         {
             if (play_code != DEFAULT_CODE)
             {
 #ifdef EMO_DEBUG
-                printf("³¬Ê±%lu msÎ´ÊÕµ½ĞÂÖ¸Áî£¬»Øµ½Ä¬ÈÏ±íÇé 0x%02X\r\n",
+                printf("è¶…æ—¶%lu msæœªæ”¶åˆ°æ–°æŒ‡ä»¤ï¼Œå›åˆ°é»˜è®¤è¡¨æƒ… 0x%02X\r\n",
                        (unsigned long)REVERT_MS, DEFAULT_CODE);
 #endif						
             }
             play_code    = DEFAULT_CODE;
-            last_rx_tick = now;      /* ÖØÖÃ»ù×¼£¬±ÜÃâ¶à´Î½øÈë */
+            last_rx_tick = now;      /* é‡ç½®åŸºå‡†ï¼Œé¿å…å¤šæ¬¡è¿›å…¥ */
         }
 
-        /* 3) Ñ­»·²¥·Åµ±Ç°±íÇé£ºÃ¿´Î²¥·ÅÍêÕûÒ»±é GIF */
+        /* 3) å¾ªç¯æ’­æ”¾å½“å‰è¡¨æƒ…ï¼šæ¯æ¬¡æ’­æ”¾å®Œæ•´ä¸€é GIF */
         show_emotion_by_code(play_code);
-        /* º¯ÊıÄÚ²¿»á´ÓµÚÒ»Ö¡²¥µ½×îºóÒ»Ö¡£¬²¥Íê·µ»Ø£¬È»ºóÏÂÒ»ÂÖ while ÔÙ²¥Ò»±é£¬
-           Ö±µ½ play_code ±»ĞÂµÄ´®¿ÚÖ¸Áî»ò³¬Ê±Âß¼­¸Ä³ÉÆäËû±íÇéÎªÖ¹¡£*/
+        /* å‡½æ•°å†…éƒ¨ä¼šä»ç¬¬ä¸€å¸§æ’­åˆ°æœ€åä¸€å¸§ï¼Œæ’­å®Œè¿”å›ï¼Œç„¶åä¸‹ä¸€è½® while å†æ’­ä¸€éï¼Œ
+           ç›´åˆ° play_code è¢«æ–°çš„ä¸²å£æŒ‡ä»¤æˆ–è¶…æ—¶é€»è¾‘æ”¹æˆå…¶ä»–è¡¨æƒ…ä¸ºæ­¢ã€‚*/
 				
-				/* Ğ¡ delay£¬±ÜÃâÖ÷Ñ­»·Õ¼Âú CPU£»²»ÔÙÆµ·±ÉÁ LED ÁË */
+				/* å° delayï¼Œé¿å…ä¸»å¾ªç¯å æ»¡ CPUï¼›ä¸å†é¢‘ç¹é—ª LED äº† */
 //        delay_ms(10);
     }
 }
