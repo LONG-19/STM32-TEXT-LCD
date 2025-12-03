@@ -1,23 +1,23 @@
 /**
  ****************************************************************************************************
  * @file        piclib.c
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      æ­£ç‚¹åŸå­å›¢é˜Ÿ(ALIENTEK)
  * @version     V1.0
  * @date        2022-09-06
- * @brief       Í¼Æ¬½âÂë¿â ´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ * @brief       å›¾ç‰‡è§£ç åº“ ä»£ç 
+ * @license     Copyright (c) 2020-2032, å¹¿å·å¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó °¢²¨ÂŞ H743¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * å®éªŒå¹³å°:æ­£ç‚¹åŸå­ é˜¿æ³¢ç½— H743å¼€å‘æ¿
+ * åœ¨çº¿è§†é¢‘:www.yuanzige.com
+ * æŠ€æœ¯è®ºå›:www.openedv.com
+ * å…¬å¸ç½‘å€:www.alientek.com
+ * è´­ä¹°åœ°å€:openedv.taobao.com
  *
- * ĞŞ¸ÄËµÃ÷
+ * ä¿®æ”¹è¯´æ˜
  * V1.0 20220906
- * µÚÒ»´Î·¢²¼
+ * ç¬¬ä¸€æ¬¡å‘å¸ƒ
  *
  ****************************************************************************************************
  */
@@ -27,13 +27,13 @@
 #include "./BSP/LCD/lcd.h"
 #include "./PICTURE/hjpgd.h"
 
-extern uint32_t *g_ltdc_framebuf[2];   /* LTDC LCDÖ¡»º´æÊı×éÖ¸Õë,±ØĞëÖ¸Ïò¶ÔÓ¦´óĞ¡µÄÄÚ´æÇøÓò */
+extern uint32_t *g_ltdc_framebuf[2];   /* LTDC LCDå¸§ç¼“å­˜æ•°ç»„æŒ‡é’ˆ,å¿…é¡»æŒ‡å‘å¯¹åº”å¤§å°çš„å†…å­˜åŒºåŸŸ */
 
-_pic_info picinfo;                   /* Í¼Æ¬ĞÅÏ¢ */
-_pic_phy pic_phy;                    /* Í¼Æ¬ÏÔÊ¾ÎïÀí½Ó¿Ú */
+_pic_info picinfo;                   /* å›¾ç‰‡ä¿¡æ¯ */
+_pic_phy pic_phy;                    /* å›¾ç‰‡æ˜¾ç¤ºç‰©ç†æ¥å£ */
 
 
-//lcd.hÃ»ÓĞÌá¹©»®ºáÏßº¯Êı,ĞèÒª×Ô¼ºÊµÏÖ
+                *(uint16_t *)((uint32_t)g_ltdc_framebuf[lcdltdc.drawbuf] + lcdltdc.pixsize * (lcdltdc.pwidth * (lcdltdc.pheight - x - j - 1) + y + i)) = color[i * width + j];
 void piclib_draw_hline(uint16_t x0, uint16_t y0, uint16_t len, uint16_t color)
 {
     if ((len == 0) || (x0 > lcddev.width) || (y0 > lcddev.height))return;
@@ -41,11 +41,11 @@ void piclib_draw_hline(uint16_t x0, uint16_t y0, uint16_t len, uint16_t color)
 }
 
 /**
- * @brief       Ìî³äÑÕÉ«
- * @param       x, y          : ÆğÊ¼×ø±ê
- * @param       width, height : ¿í¶ÈºÍ¸ß¶È
- * @param       color         : ÑÕÉ«Êı×é
- * @retval      ÎŞ
+ * @brief       å¡«å……é¢œè‰²
+ * @param       x, y          : èµ·å§‹åæ ‡
+ * @param       width, height : å®½åº¦å’Œé«˜åº¦
+ * @param       color         : é¢œè‰²æ•°ç»„
+ * @retval      æ— 
  */
 static void piclib_fill_color(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *color)
 {
@@ -62,44 +62,44 @@ static void piclib_fill_color(uint16_t x, uint16_t y, uint16_t width, uint16_t h
     }
     else
     {
-        lcd_color_fill(x, y, x + width - 1, y + height - 1, color);     /* Ìî³ä */
+        lcd_color_fill(x, y, x + width - 1, y + height - 1, color);     /* å¡«å…… */
     }
 }
 
 /**
- * @brief       »­Í¼³õÊ¼»¯
- * @note        ÔÚ»­Í¼Ö®Ç°,±ØĞëÏÈµ÷ÓÃ´Ëº¯Êı, Ö¸¶¨Ïà¹Øº¯Êı
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       ç”»å›¾åˆå§‹åŒ–
+ * @note        åœ¨ç”»å›¾ä¹‹å‰,å¿…é¡»å…ˆè°ƒç”¨æ­¤å‡½æ•°, æŒ‡å®šç›¸å…³å‡½æ•°
+ * @param       æ— 
+ * @retval      æ— 
  */
 void piclib_init(void)
 {
-    pic_phy.read_point = lcd_read_point;    /* ¶Áµãº¯ÊıÊµÏÖ,½öBMPĞèÒª */
-    pic_phy.draw_point = lcd_draw_point;    /* »­µãº¯ÊıÊµÏÖ */
-    pic_phy.fill = lcd_fill;                /* Ìî³äº¯ÊıÊµÏÖ,½öGIFĞèÒª */
-    pic_phy.draw_hline = lcd_draw_hline;    /* »­Ïßº¯ÊıÊµÏÖ,½öGIFĞèÒª */
-    pic_phy.fillcolor = piclib_fill_color;  /* ÑÕÉ«Ìî³äº¯ÊıÊµÏÖ,½öTJPGDĞèÒª */
+    pic_phy.read_point = lcd_read_point;    /* è¯»ç‚¹å‡½æ•°å®ç°,ä»…BMPéœ€è¦ */
+    pic_phy.draw_point = lcd_draw_point;    /* ç”»ç‚¹å‡½æ•°å®ç° */
+    pic_phy.fill = lcd_fill;                /* å¡«å……å‡½æ•°å®ç°,ä»…GIFéœ€è¦ */
+    pic_phy.draw_hline = lcd_draw_hline;    /* ç”»çº¿å‡½æ•°å®ç°,ä»…GIFéœ€è¦ */
+    pic_phy.fillcolor = piclib_fill_color;  /* é¢œè‰²å¡«å……å‡½æ•°å®ç°,ä»…TJPGDéœ€è¦ */
 
-    picinfo.lcdwidth = lcddev.width;        /* µÃµ½LCDµÄ¿í¶ÈÏñËØ */
-    picinfo.lcdheight = lcddev.height;      /* µÃµ½LCDµÄ¸ß¶ÈÏñËØ */
+    picinfo.lcdwidth = lcddev.width;        /* å¾—åˆ°LCDçš„å®½åº¦åƒç´  */
+    picinfo.lcdheight = lcddev.height;      /* å¾—åˆ°LCDçš„é«˜åº¦åƒç´  */
 
-    picinfo.ImgWidth = 0;                   /* ³õÊ¼»¯¿í¶ÈÎª0 */
-    picinfo.ImgHeight = 0;                  /* ³õÊ¼»¯¸ß¶ÈÎª0 */
-    picinfo.Div_Fac = 0;                    /* ³õÊ¼»¯Ëõ·ÅÏµÊıÎª0 */
-    picinfo.S_Height = 0;                   /* ³õÊ¼»¯Éè¶¨µÄ¸ß¶ÈÎª0 */
-    picinfo.S_Width = 0;                    /* ³õÊ¼»¯Éè¶¨µÄ¿í¶ÈÎª0 */
-    picinfo.S_XOFF = 0;                     /* ³õÊ¼»¯xÖáµÄÆ«ÒÆÁ¿Îª0 */
-    picinfo.S_YOFF = 0;                     /* ³õÊ¼»¯yÖáµÄÆ«ÒÆÁ¿Îª0 */
-    picinfo.staticx = 0;                    /* ³õÊ¼»¯µ±Ç°ÏÔÊ¾µ½µÄx×ø±êÎª0 */
-    picinfo.staticy = 0;                    /* ³õÊ¼»¯µ±Ç°ÏÔÊ¾µ½µÄy×ø±êÎª0 */
+    picinfo.ImgWidth = 0;                   /* åˆå§‹åŒ–å®½åº¦ä¸º0 */
+    picinfo.ImgHeight = 0;                  /* åˆå§‹åŒ–é«˜åº¦ä¸º0 */
+    picinfo.Div_Fac = 0;                    /* åˆå§‹åŒ–ç¼©æ”¾ç³»æ•°ä¸º0 */
+    picinfo.S_Height = 0;                   /* åˆå§‹åŒ–è®¾å®šçš„é«˜åº¦ä¸º0 */
+    picinfo.S_Width = 0;                    /* åˆå§‹åŒ–è®¾å®šçš„å®½åº¦ä¸º0 */
+    picinfo.S_XOFF = 0;                     /* åˆå§‹åŒ–xè½´çš„åç§»é‡ä¸º0 */
+    picinfo.S_YOFF = 0;                     /* åˆå§‹åŒ–yè½´çš„åç§»é‡ä¸º0 */
+    picinfo.staticx = 0;                    /* åˆå§‹åŒ–å½“å‰æ˜¾ç¤ºåˆ°çš„xåæ ‡ä¸º0 */
+    picinfo.staticy = 0;                    /* åˆå§‹åŒ–å½“å‰æ˜¾ç¤ºåˆ°çš„yåæ ‡ä¸º0 */
 }
 
 /**
- * @brief       ¿ìËÙALPHA BLENDINGËã·¨
- * @param       src           : ÑÕÉ«Êı
- * @param       dst           : Ä¿±êÑÕÉ«
- * @param       alpha         : Í¸Ã÷³Ì¶È(0~32)
- * @retval      »ìºÏºóµÄÑÕÉ«
+ * @brief       å¿«é€ŸALPHA BLENDINGç®—æ³•
+ * @param       src           : é¢œè‰²æ•°
+ * @param       dst           : ç›®æ ‡é¢œè‰²
+ * @param       alpha         : é€æ˜ç¨‹åº¦(0~32)
+ * @retval      æ··åˆåçš„é¢œè‰²
  */
 uint16_t piclib_alpha_blend(uint16_t src, uint16_t dst, uint8_t alpha)
 {
@@ -118,9 +118,9 @@ uint16_t piclib_alpha_blend(uint16_t src, uint16_t dst, uint8_t alpha)
 }
 
 /**
- * @brief       ³õÊ¼»¯ÖÇÄÜ»­µã
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       åˆå§‹åŒ–æ™ºèƒ½ç”»ç‚¹
+ * @param       æ— 
+ * @retval      æ— 
  */
 void piclib_ai_draw_init(void)
 {
@@ -128,27 +128,27 @@ void piclib_ai_draw_init(void)
     temp = (float)picinfo.S_Width / picinfo.ImgWidth;
     temp1 = (float)picinfo.S_Height / picinfo.ImgHeight;
 
-    if (temp < temp1)temp1 = temp;  /* È¡½ÏĞ¡µÄÄÇ¸ö */
+    if (temp < temp1)temp1 = temp;  /* å–è¾ƒå°çš„é‚£ä¸ª */
 
     if (temp1 > 1)temp1 = 1;
 
-    /* Ê¹Í¼Æ¬´¦ÓÚËù¸øÇøÓòµÄÖĞ¼ä */
+    /* ä½¿å›¾ç‰‡å¤„äºæ‰€ç»™åŒºåŸŸçš„ä¸­é—´ */
     picinfo.S_XOFF += (picinfo.S_Width - temp1 * picinfo.ImgWidth) / 2;
     picinfo.S_YOFF += (picinfo.S_Height - temp1 * picinfo.ImgHeight) / 2;
-    temp1 *= 8192;  /* À©´ó8192±¶ */
+    temp1 *= 8192;  /* æ‰©å¤§8192å€ */
     picinfo.Div_Fac = temp1;
     picinfo.staticx = 0xffff;
-    picinfo.staticy = 0xffff;   /* ·Åµ½Ò»¸ö²»¿ÉÄÜµÄÖµÉÏÃæ */
+    picinfo.staticy = 0xffff;   /* æ”¾åˆ°ä¸€ä¸ªä¸å¯èƒ½çš„å€¼ä¸Šé¢ */
 }
 
 /**
- * @brief       ÅĞ¶ÏÕâ¸öÏñËØÊÇ·ñ¿ÉÒÔÏÔÊ¾
- * @param       x, y          : ÏñËØÔ­Ê¼×ø±ê
- * @param       chg           : ¹¦ÄÜ±äÁ¿
- * @param       ÎŞ
- * @retval      ²Ù×÷½á¹û
- *   @arg       0   , ²»ĞèÒªÏÔÊ¾
- *   @arg       1   , ĞèÒªÏÔÊ¾
+ * @brief       åˆ¤æ–­è¿™ä¸ªåƒç´ æ˜¯å¦å¯ä»¥æ˜¾ç¤º
+ * @param       x, y          : åƒç´ åŸå§‹åæ ‡
+ * @param       chg           : åŠŸèƒ½å˜é‡
+ * @param       æ— 
+ * @retval      æ“ä½œç»“æœ
+ *   @arg       0   , ä¸éœ€è¦æ˜¾ç¤º
+ *   @arg       1   , éœ€è¦æ˜¾ç¤º
  */
 __inline uint8_t piclib_is_element_ok(uint16_t x, uint16_t y, uint8_t chg)
 {
@@ -169,34 +169,34 @@ __inline uint8_t piclib_is_element_ok(uint16_t x, uint16_t y, uint8_t chg)
 }
 
 /**
- * @brief       ÖÇÄÜ»­Í¼
- * @note        Í¼Æ¬½öÔÚx,yºÍwidth, heightÏŞ¶¨µÄÇøÓòÄÚÏÔÊ¾.
+ * @brief       æ™ºèƒ½ç”»å›¾
+ * @note        å›¾ç‰‡ä»…åœ¨x,yå’Œwidth, heighté™å®šçš„åŒºåŸŸå†…æ˜¾ç¤º.
  *
- * @param       filename      : °üº¬Â·¾¶µÄÎÄ¼şÃû(.bmp/.jpg/.jpeg/.gifµÈ)
- * @param       x, y          : ÆğÊ¼×ø±ê
- * @param       width, height : ÏÔÊ¾ÇøÓò
- * @param       fast          : Ê¹ÄÜ¿ìËÙ½âÂë
- *   @arg                       0, ²»Ê¹ÄÜ
- *   @arg                       1, Ê¹ÄÜ
- * @note                        Í¼Æ¬³ß´çĞ¡ÓÚµÈÓÚÒº¾§·Ö±æÂÊ,²ÅÖ§³Ö¿ìËÙ½âÂë
- * @retval      ÎŞ
+ * @param       filename      : åŒ…å«è·¯å¾„çš„æ–‡ä»¶å(.bmp/.jpg/.jpeg/.gifç­‰)
+ * @param       x, y          : èµ·å§‹åæ ‡
+ * @param       width, height : æ˜¾ç¤ºåŒºåŸŸ
+ * @param       fast          : ä½¿èƒ½å¿«é€Ÿè§£ç 
+ *   @arg                       0, ä¸ä½¿èƒ½
+ *   @arg                       1, ä½¿èƒ½
+ * @note                        å›¾ç‰‡å°ºå¯¸å°äºç­‰äºæ¶²æ™¶åˆ†è¾¨ç‡,æ‰æ”¯æŒå¿«é€Ÿè§£ç 
+ * @retval      æ— 
  */
 uint8_t piclib_ai_load_picfile(char *filename, uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t fast)
 {
-    uint8_t res;                                                /* ·µ»ØÖµ */
+    uint8_t res;                                                /* è¿”å›å€¼ */
     uint8_t temp;
 
-    if ((x + width) > picinfo.lcdwidth)return PIC_WINDOW_ERR;   /* x×ø±ê³¬·¶Î§ÁË */
+    if ((x + width) > picinfo.lcdwidth)return PIC_WINDOW_ERR;   /* xåæ ‡è¶…èŒƒå›´äº† */
 
-    if ((y + height) > picinfo.lcdheight)return PIC_WINDOW_ERR; /* y×ø±ê³¬·¶Î§ÁË */
+    if ((y + height) > picinfo.lcdheight)return PIC_WINDOW_ERR; /* yåæ ‡è¶…èŒƒå›´äº† */
 
-    /* µÃµ½ÏÔÊ¾·½¿ò´óĞ¡ */
-    if (width == 0 || height == 0)return PIC_WINDOW_ERR;        /* ´°¿ÚÉè¶¨´íÎó */
+    /* å¾—åˆ°æ˜¾ç¤ºæ–¹æ¡†å¤§å° */
+    if (width == 0 || height == 0)return PIC_WINDOW_ERR;        /* çª—å£è®¾å®šé”™è¯¯ */
 
     picinfo.S_Height = height;
     picinfo.S_Width = width;
 
-    /* ÏÔÊ¾ÇøÓòÎŞĞ§ */
+    /* æ˜¾ç¤ºåŒºåŸŸæ— æ•ˆ */
     if (picinfo.S_Height == 0 || picinfo.S_Width == 0)
     {
         picinfo.S_Height = lcddev.height;
@@ -204,53 +204,53 @@ uint8_t piclib_ai_load_picfile(char *filename, uint16_t x, uint16_t y, uint16_t 
         return FALSE;
     }
 
-    if (pic_phy.fillcolor == NULL)fast = 0;                     /* ÑÕÉ«Ìî³äº¯ÊıÎ´ÊµÏÖ,²»ÄÜ¿ìËÙÏÔÊ¾ */
+    if (pic_phy.fillcolor == NULL)fast = 0;                     /* é¢œè‰²å¡«å……å‡½æ•°æœªå®ç°,ä¸èƒ½å¿«é€Ÿæ˜¾ç¤º */
 
-    /* ÏÔÊ¾µÄ¿ªÊ¼×ø±êµã */
+    /* æ˜¾ç¤ºçš„å¼€å§‹åæ ‡ç‚¹ */
     picinfo.S_YOFF = y;
     picinfo.S_XOFF = x;
 
-    /* ÎÄ¼şÃû´«µİ */
-    temp = exfuns_file_type(filename);                          /* µÃµ½ÎÄ¼şµÄÀàĞÍ */
+    /* æ–‡ä»¶åä¼ é€’ */
+    temp = exfuns_file_type(filename);                          /* å¾—åˆ°æ–‡ä»¶çš„ç±»å‹ */
 
     switch (temp)
     {
         case T_BMP:
-            res = stdbmp_decode(filename);                      /* ½âÂëbmp */
+            res = stdbmp_decode(filename);                      /* è§£ç bmp */
             break;
 
         case T_JPG:
         case T_JPEG:
-            if (fast)   /* ¿ÉÄÜĞèÒªÓ²¼ş½âÂë */
+            if (fast)   /* å¯èƒ½éœ€è¦ç¡¬ä»¶è§£ç  */
             {
                 res = jpg_get_size(filename, &picinfo.ImgWidth, &picinfo.ImgHeight);
 
                 if (res == 0)
                 {
-                    if (picinfo.ImgWidth <= lcddev.width && picinfo.ImgHeight <= lcddev.height &&       /* Âú×ã·Ö±æÂÊĞ¡ÓÚµÈÓÚÆÁÄ»·Ö±æÂÊ */
-                        picinfo.ImgWidth <= picinfo.S_Width && picinfo.ImgHeight <= picinfo.S_Height && /* Âú×ãÍ¼Æ¬¿í¶ÈÎª16µÄÕûÊı±¶ */
-                        (picinfo.ImgWidth % 16) == 0)                                                   /* Ôò¿ÉÒÔÓ²¼ş½âÂë */
+                    if (picinfo.ImgWidth <= lcddev.width && picinfo.ImgHeight <= lcddev.height &&       /* æ»¡è¶³åˆ†è¾¨ç‡å°äºç­‰äºå±å¹•åˆ†è¾¨ç‡ */
+                        picinfo.ImgWidth <= picinfo.S_Width && picinfo.ImgHeight <= picinfo.S_Height && /* æ»¡è¶³å›¾ç‰‡å®½åº¦ä¸º16çš„æ•´æ•°å€ */
+                        (picinfo.ImgWidth % 16) == 0)                                                   /* åˆ™å¯ä»¥ç¡¬ä»¶è§£ç  */
                     {
-                        res = hjpgd_decode(filename);       /* ²ÉÓÃÓ²½âÂëJPG/JPEG */
+                        res = hjpgd_decode(filename);       /* é‡‡ç”¨ç¡¬è§£ç JPG/JPEG */
                     }
                     else
                     {
-                        res = jpg_decode(filename, fast);   /* ²ÉÓÃÈí¼ş½âÂëJPG/JPEG */
+                        res = jpg_decode(filename, fast);   /* é‡‡ç”¨è½¯ä»¶è§£ç JPG/JPEG */
                     }
                 }
             }
             else
             {
-                res = jpg_decode(filename, fast);           /* Í³Ò»²ÉÓÃÈí¼ş½âÂëJPG/JPEG */
+                res = jpg_decode(filename, fast);           /* ç»Ÿä¸€é‡‡ç”¨è½¯ä»¶è§£ç JPG/JPEG */
             }
             break;
 
         case T_GIF:
-            res = gif_decode(filename, x, y, width, height);    /* ½âÂëgif */
+            res = gif_decode(filename, x, y, width, height);    /* è§£ç gif */
             break;
 
         default:
-            res = PIC_FORMAT_ERR;                               /* ·ÇÍ¼Æ¬¸ñÊ½!!! */
+            res = PIC_FORMAT_ERR;                               /* éå›¾ç‰‡æ ¼å¼!!! */
             break;
     }
 
@@ -258,9 +258,9 @@ uint8_t piclib_ai_load_picfile(char *filename, uint16_t x, uint16_t y, uint16_t 
 }
 
 /**
- * @brief       ¶¯Ì¬·ÖÅäÄÚ´æ
- * @param       size          : ÒªÉêÇëµÄÄÚ´æ´óĞ¡(×Ö½Ú)
- * @retval      ·ÖÅäµ½µÄÄÚ´æÊ×µØÖ·
+ * @brief       åŠ¨æ€åˆ†é…å†…å­˜
+ * @param       size          : è¦ç”³è¯·çš„å†…å­˜å¤§å°(å­—èŠ‚)
+ * @retval      åˆ†é…åˆ°çš„å†…å­˜é¦–åœ°å€
  */
 void *piclib_mem_malloc (uint32_t size)
 {
@@ -268,9 +268,9 @@ void *piclib_mem_malloc (uint32_t size)
 }
 
 /**
- * @brief       ÊÍ·ÅÄÚ´æ
- * @param       paddr         : ÄÚ´æÊ×µØÖ·
- * @retval      ÎŞ
+ * @brief       é‡Šæ”¾å†…å­˜
+ * @param       paddr         : å†…å­˜é¦–åœ°å€
+ * @retval      æ— 
  */
 void piclib_mem_free (void *paddr)
 {
