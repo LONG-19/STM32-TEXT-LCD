@@ -112,6 +112,7 @@ void ltdc_init(void);                                                           
 uint8_t ltdc_is_double_buffered(void);                                                                          /* ˫���ջ��� */
 uint32_t ltdc_get_draw_buffer(void);                                                                            /* ��ȡ��ǰ������ַ */
 uint32_t ltdc_get_display_buffer(void);                                                                         /* ��ȡ��ǰ��ʾ��ַ */
+void ltdc_use_inactive_buffer(void);                                                                            /* ʹ�õ�ǰδ��ʾ�ķ���� */
 void ltdc_present_draw_buffer(void);                                                                            /* ˫���������л� */
 
-#endif 
+#endif

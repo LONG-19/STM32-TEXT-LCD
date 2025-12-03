@@ -212,6 +212,9 @@ uint8_t piclib_ai_load_picfile(char *filename, uint16_t x, uint16_t y, uint16_t 
     picinfo.S_YOFF = y;
     picinfo.S_XOFF = x;
 
+    /* ˫���ڿɹ����£�����ʹ�õ�ǰδ��ʾ�ķ���� */
+    ltdc_use_inactive_buffer();
+
     /* �ļ������� */
     temp = exfuns_file_type(filename);                          /* �õ��ļ������� */
 
