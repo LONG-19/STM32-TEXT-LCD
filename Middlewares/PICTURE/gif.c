@@ -1,23 +1,23 @@
 /**
  ****************************************************************************************************
  * @file        gif.c
- * @author      ÕýµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½Å¶ï¿½(ALIENTEK)
  * @version     V1.0
  * @date        2022-09-06
- * @brief       Í¼Æ¬½âÂë-gif½âÂë ´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+ * @brief       Í¼Æ¬ï¿½ï¿½ï¿½ï¿½-gifï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+ * @license     Copyright (c) 2020-2032, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Æ¼ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕýµãÔ­×Ó °¢²¨ÂÞ H743¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * Êµï¿½ï¿½Æ½Ì¨:ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ H743ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµ:www.yuanzige.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+ * ï¿½ï¿½Ë¾ï¿½ï¿½Ö·:www.alientek.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Ö·:openedv.taobao.com
  *
- * ÐÞ¸ÄËµÃ÷
+ * ï¿½Þ¸ï¿½Ëµï¿½ï¿½
  * V1.0 20220906
- * µÚÒ»´Î·¢²¼
+ * ï¿½ï¿½Ò»ï¿½Î·ï¿½ï¿½ï¿½
  *
  ****************************************************************************************************
  */
@@ -25,6 +25,7 @@
 #include "./PICTURE/gif.h"
 #include "./PICTURE/piclib.h"
 #include "./SYSTEM/delay/delay.h"
+#include "./BSP/LCD/ltdc.h"
 
 
 const uint16_t _aMaskTbl[16] =
@@ -38,23 +39,23 @@ const uint16_t _aMaskTbl[16] =
 const uint8_t _aInterlaceOffset[] = {8, 8, 4, 2};
 const uint8_t _aInterlaceYPos  [] = {0, 4, 2, 1};
 
-uint8_t g_gif_decoding = 0; /* ±ê¼ÇGIFÕýÔÚ½âÂë */
+uint8_t g_gif_decoding = 0; /* ï¿½ï¿½ï¿½GIFï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½ */
 
 
-/* ¶¨ÒåÊÇ·ñÊ¹ÓÃmalloc,ÕâÀïÎÒÃÇÑ¡ÔñÊ¹ÓÃmalloc */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ê¹ï¿½ï¿½malloc,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ê¹ï¿½ï¿½malloc */
 #if GIF_USE_MALLOC == 0
-gif89a tgif89a;         /* gif89aÎÄ¼þ */
-FIL f_gfile;            /* gif ÎÄ¼þ */
+gif89a tgif89a;         /* gif89aï¿½Ä¼ï¿½ */
+FIL f_gfile;            /* gif ï¿½Ä¼ï¿½ */
 LZW_INFO tlzw;          /* lzw */
 #endif
 
 
 /**
- * @brief       ¼ì²âGIFÍ·
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @retval      ÅÐ¶Ï½á¹û
- *   @arg       0   , ÊÇGIF89a/87a
- *   @arg       ÆäËû, ·ÇGIF89a/87a
+ * @brief       ï¿½ï¿½ï¿½GIFÍ·
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @retval      ï¿½Ð¶Ï½ï¿½ï¿½
+ *   @arg       0   , ï¿½ï¿½GIF89a/87a
+ *   @arg       ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½GIF89a/87a
  */
 static uint8_t gif_check_head(FIL *filename)
 {
@@ -78,9 +79,9 @@ static uint8_t gif_check_head(FIL *filename)
 }
 
 /**
- * @brief       ½«RGB888×ªÎªRGB565
- * @param       ctb : RGB888ÑÕÉ«Êý×éÊ×µØÖ·
- * @retval      RGB565ÑÕÉ«Öµ
+ * @brief       ï¿½ï¿½RGB888×ªÎªRGB565
+ * @param       ctb : RGB888ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½×µï¿½Ö·
+ * @retval      RGB565ï¿½ï¿½É«Öµ
  */
 static uint16_t gif_getrgb565(uint8_t *ctb)
 {
@@ -94,13 +95,13 @@ static uint16_t gif_getrgb565(uint8_t *ctb)
 }
 
 /**
- * @brief       ¶ÁÈ¡ÑÕÉ«±í
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @param       gif      : GIFÐÅÏ¢
- * @param       numcolors: ÑÕÉ«±í´óÐ¡
- * @retval      ²Ù×÷½á¹û
- *   @arg       0   , ³É¹¦
- *   @arg       ÆäËû, ´íÎóÂë
+ * @brief       ï¿½ï¿½È¡ï¿½ï¿½É«ï¿½ï¿½
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @param       numcolors: ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ð¡
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *   @arg       0   , ï¿½É¹ï¿½
+ *   @arg       ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 static uint8_t gif_readcolortbl(FIL *filename, gif89a *gif, uint16_t numcolors)
 {
@@ -113,7 +114,7 @@ static uint8_t gif_readcolortbl(FIL *filename, gif89a *gif, uint16_t numcolors)
     {
         res = f_read(filename, rgb, 3, (UINT *)&readed);
 
-        if (res)return 1;   /* ¶Á´íÎó */
+        if (res)return 1;   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
         gif->colortbl[t] = gif_getrgb565(rgb);
     }
@@ -122,12 +123,12 @@ static uint8_t gif_readcolortbl(FIL *filename, gif89a *gif, uint16_t numcolors)
 }
 
 /**
- * @brief       µÃµ½Âß¼­ÆÁÄ»ÃèÊö,Í¼Ïñ³ß´çµÈ
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @param       gif      : GIFÐÅÏ¢
- * @retval      ²Ù×÷½á¹û
- *   @arg       0   , ³É¹¦
- *   @arg       ÆäËû, ´íÎóÂë
+ * @brief       ï¿½Ãµï¿½ï¿½ß¼ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½,Í¼ï¿½ï¿½ß´ï¿½ï¿½
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *   @arg       0   , ï¿½É¹ï¿½
+ *   @arg       ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 uint8_t gif_getinfo(FIL *file, gif89a *gif)
 {
@@ -137,13 +138,13 @@ uint8_t gif_getinfo(FIL *file, gif89a *gif)
 
     if (res)return 1;
 
-    if (gif->gifLSD.flag & 0x80)                            /* ´æÔÚÈ«¾ÖÑÕÉ«±í */
+    if (gif->gifLSD.flag & 0x80)                            /* ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ */
     {
-        gif->numcolors = 2 << (gif->gifLSD.flag & 0x07);    /* µÃµ½ÑÕÉ«±í´óÐ¡ */
+        gif->numcolors = 2 << (gif->gifLSD.flag & 0x07);    /* ï¿½Ãµï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
         if (gif_readcolortbl(file, gif, gif->numcolors))
         {
-            return 1;                                       /* ¶Á´íÎó */
+            return 1;                                       /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         }
     }
 
@@ -151,9 +152,9 @@ uint8_t gif_getinfo(FIL *file, gif89a *gif)
 }
 
 /**
- * @brief       ±£´æÈ«¾ÖÑÕÉ«±í
- * @param       gif      : GIFÐÅÏ¢
- * @retval      ÎÞ
+ * @brief       ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @retval      ï¿½ï¿½
  */
 static void gif_savegctbl(gif89a *gif)
 {
@@ -161,14 +162,14 @@ static void gif_savegctbl(gif89a *gif)
 
     for (i = 0; i < 256; i++)
     {
-        gif->bkpcolortbl[i] = gif->colortbl[i]; /* ±£´æÈ«¾ÖÑÕÉ« */
+        gif->bkpcolortbl[i] = gif->colortbl[i]; /* ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½É« */
     }
 }
 
 /**
- * @brief       »Ö¸´È«¾ÖÑÕÉ«±í
- * @param       gif      : GIFÐÅÏ¢
- * @retval      ÎÞ
+ * @brief       ï¿½Ö¸ï¿½È«ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @retval      ï¿½ï¿½
  */
 static void gif_recovergctbl(gif89a *gif)
 {
@@ -176,15 +177,15 @@ static void gif_recovergctbl(gif89a *gif)
 
     for (i = 0; i < 256; i++)
     {
-        gif->colortbl[i] = gif->bkpcolortbl[i]; /* »Ö¸´È«¾ÖÑÕÉ« */
+        gif->colortbl[i] = gif->bkpcolortbl[i]; /* ï¿½Ö¸ï¿½È«ï¿½ï¿½ï¿½ï¿½É« */
     }
 }
 
 /**
- * @brief       ³õÊ¼»¯LZWÏà¹Ø²ÎÊý
- * @param       gif      : GIFÐÅÏ¢
- * @param       codesize : lzwÂë³¤¶È
- * @retval      ÎÞ
+ * @brief       ï¿½ï¿½Ê¼ï¿½ï¿½LZWï¿½ï¿½Ø²ï¿½ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @param       codesize : lzwï¿½ë³¤ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 static void gif_initlzw(gif89a *gif, uint8_t codesize)
 {
@@ -201,36 +202,36 @@ static void gif_initlzw(gif89a *gif, uint8_t codesize)
 }
 
 /**
- * @brief       ¶ÁÈ¡Ò»¸öÊý¾Ý¿é
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @param       buf      : Êý¾Ý»º´æÇø
- * @param       maxnum   : ×î´ó¶ÁÐ´Êý¾ÝÏÞÖÆ
- * @retval      ÎÞ
+ * @brief       ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @param       buf      : ï¿½ï¿½ï¿½Ý»ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @param       maxnum   : ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 static uint16_t gif_getdatablock(FIL *filename, uint8_t *buf, uint16_t maxnum)
 {
     uint8_t cnt;
     uint32_t readed;
     uint32_t fpos;
-    f_read(filename, &cnt, 1, (UINT *)&readed);             /* µÃµ½LZW³¤¶È */
+    f_read(filename, &cnt, 1, (UINT *)&readed);             /* ï¿½Ãµï¿½LZWï¿½ï¿½ï¿½ï¿½ */
 
     if (cnt)
     {
-        if (buf)                                            /* ÐèÒª¶ÁÈ¡ */
+        if (buf)                                            /* ï¿½ï¿½Òªï¿½ï¿½È¡ */
         {
             if (cnt > maxnum)
             {
                 fpos = f_tell(filename);
-                f_lseek(filename, fpos + cnt);              /* Ìø¹ý */
-                return cnt;                                 /* Ö±½Ó²»¶Á */
+                f_lseek(filename, fpos + cnt);              /* ï¿½ï¿½ï¿½ï¿½ */
+                return cnt;                                 /* Ö±ï¿½Ó²ï¿½ï¿½ï¿½ */
             }
 
-            f_read(filename, buf, cnt, (UINT *)&readed);    /* µÃµ½LZW³¤¶È */
+            f_read(filename, buf, cnt, (UINT *)&readed);    /* ï¿½Ãµï¿½LZWï¿½ï¿½ï¿½ï¿½ */
         }
-        else                                                /* Ö±½ÓÌø¹ý */
+        else                                                /* Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         {
             fpos = f_tell(filename);
-            f_lseek(filename, fpos + cnt);                  /* Ìø¹ý */
+            f_lseek(filename, fpos + cnt);                  /* ï¿½ï¿½ï¿½ï¿½ */
         }
     }
 
@@ -238,55 +239,55 @@ static uint16_t gif_getdatablock(FIL *filename, uint8_t *buf, uint16_t maxnum)
 }
 
 /**
- * @brief       ¶ÁÈ¡Ò»¸öÀ©Õ¹¿é
- *   @note      Ò»¸öÀ©Õ¹¿é¿ÉÒÔÓÉ¶à¸öÊý¾Ý¿é×é³É, Èç¹û·¢ÏÖÎ´ÖªÀ©Õ¹¿é, Ôò¶ÁÈ¡Ê§°Ü
- * @param       filename    : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @param       gif         : GIFÐÅÏ¢
- * @param       pTransIndex : Í¸Ã÷É«±í
- * @param       pDisposal   : ´¦Àí·½·¨
- * @retval      ²Ù×÷½á¹û
- *   @arg       0   , ³É¹¦
- *   @arg       ÆäËû, ´íÎóÂë
+ * @brief       ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½
+ *   @note      Ò»ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´Öªï¿½ï¿½Õ¹ï¿½ï¿½, ï¿½ï¿½ï¿½È¡Ê§ï¿½ï¿½
+ * @param       filename    : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @param       gif         : GIFï¿½ï¿½Ï¢
+ * @param       pTransIndex : Í¸ï¿½ï¿½É«ï¿½ï¿½
+ * @param       pDisposal   : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *   @arg       0   , ï¿½É¹ï¿½
+ *   @arg       ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 static uint8_t gif_readextension(FIL *filename, gif89a *gif, int *pTransIndex, uint8_t *pDisposal)
 {
     uint8_t temp;
     uint32_t readed;
     uint8_t buf[4];
-    f_read(filename, &temp, 1, (UINT *)&readed);                    /* µÃµ½³¤¶È */
+    f_read(filename, &temp, 1, (UINT *)&readed);                    /* ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ */
 
     switch (temp)
     {
         case GIF_PLAINTEXT:
         case GIF_APPLICATION:
         case GIF_COMMENT:
-            while (gif_getdatablock(filename, 0, 256) > 0);         /* »ñÈ¡Êý¾Ý¿é */
+            while (gif_getdatablock(filename, 0, 256) > 0);         /* ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý¿ï¿½ */
 
             return 0;
 
-        case GIF_GRAPHICCTL:                                        /* Í¼ÐÎ¿ØÖÆÀ©Õ¹¿é */
-            if (gif_getdatablock(filename, buf, 4) != 4)return 1;   /* Í¼ÐÎ¿ØÖÆÀ©Õ¹¿éµÄ³¤¶È±ØÐëÎª4 */
+        case GIF_GRAPHICCTL:                                        /* Í¼ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ */
+            if (gif_getdatablock(filename, buf, 4) != 4)return 1;   /* Í¼ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½Ä³ï¿½ï¿½È±ï¿½ï¿½ï¿½Îª4 */
 
-            gif->delay = (buf[2] << 8) | buf[1];                    /* µÃµ½ÑÓÊ± */
-            *pDisposal = (buf[0] >> 2) & 0x7;                       /* µÃµ½´¦Àí·½·¨ */
+            gif->delay = (buf[2] << 8) | buf[1];                    /* ï¿½Ãµï¿½ï¿½ï¿½Ê± */
+            *pDisposal = (buf[0] >> 2) & 0x7;                       /* ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
-            if ((buf[0] & 0x1) != 0)*pTransIndex = buf[3];          /* Í¸Ã÷É«±í */
+            if ((buf[0] & 0x1) != 0)*pTransIndex = buf[3];          /* Í¸ï¿½ï¿½É«ï¿½ï¿½ */
 
-            f_read(filename, &temp, 1, (UINT *)&readed);            /* µÃµ½LZW³¤¶È */
+            f_read(filename, &temp, 1, (UINT *)&readed);            /* ï¿½Ãµï¿½LZWï¿½ï¿½ï¿½ï¿½ */
 
-            if (temp != 0)return 1;                                 /* ¶ÁÈ¡Êý¾Ý¿é½áÊø·û´íÎó */
+            if (temp != 0)return 1;                                 /* ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
             return 0;
     }
 
-    return 1;                                                       /* ´íÎóµÄÊý¾Ý */
+    return 1;                                                       /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 }
 
 /**
- * @brief       ´ÓLZW»º´æÖÐµÃµ½ÏÂÒ»¸öLZWÂë,Ã¿¸öÂë°üº¬12Î»
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @param       gif      : GIFÐÅÏ¢
- * @retval      ²Ù×÷½á¹û
+ * @brief       ï¿½ï¿½LZWï¿½ï¿½ï¿½ï¿½ï¿½ÐµÃµï¿½ï¿½ï¿½Ò»ï¿½ï¿½LZWï¿½ï¿½,Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½12Î»
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 static int gif_getnextcode(FIL *filename, gif89a *gif)
 {
@@ -343,13 +344,13 @@ static int gif_getnextcode(FIL *filename, gif89a *gif)
 }
 
 /**
- * @brief       µÃµ½LZWµÄÏÂÒ»¸öÂë
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @param       gif      : GIFÐÅÏ¢
- * @retval      ²Ù×÷½á¹û
- *   @arg       >=0 , ³É¹¦
- *   @arg       -1  , ²»³É¹¦
- *   @arg       -2  , ¶Áµ½½áÊø·ûÁË
+ * @brief       ï¿½Ãµï¿½LZWï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *   @arg       >=0 , ï¿½É¹ï¿½
+ *   @arg       -1  , ï¿½ï¿½ï¿½É¹ï¿½
+ *   @arg       -2  , ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 static int gif_getnextbyte(FIL *filename, gif89a *gif)
 {
@@ -429,16 +430,16 @@ static int gif_getnextbyte(FIL *filename, gif89a *gif)
 }
 
 /**
- * @brief       ÏÔÊ¾GIFÍ¼Ïñ
- * @param       filename    : °üº¬Â·¾¶µÄÎÄ¼þÃû
- * @param       gif         : GIFÐÅÏ¢
- * @param       x0, y0      : ÏÔÊ¾Î»ÖÃ
- * @param       Transparency: Í¸Ã÷¶ÈË÷Òý
- * @param       Disposal    : ´¦Àí·½Ê½, °üº¬ÉÏÒ»¸öÍ¼ÏñµÄ´¦Àí·½Ê½
- *                            µ±Disposal = 2Ê±, ±íÊ¾Í¸Ã÷ÏñËØ, ÓÃ±³¾°É«äÖÈ¾
- * @retval      ²Ù×÷½á¹û
- *   @arg       0 , ³É¹¦
- *   @arg       1 , Ê§°Ü
+ * @brief       ï¿½ï¿½Ê¾GIFÍ¼ï¿½ï¿½
+ * @param       filename    : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+ * @param       gif         : GIFï¿½ï¿½Ï¢
+ * @param       x0, y0      : ï¿½ï¿½Ê¾Î»ï¿½ï¿½
+ * @param       Transparency: Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @param       Disposal    : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Í¼ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
+ *                            ï¿½ï¿½Disposal = 2Ê±, ï¿½ï¿½Ê¾Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ã±ï¿½ï¿½ï¿½É«ï¿½ï¿½È¾
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *   @arg       0 , ï¿½É¹ï¿½
+ *   @arg       1 , Ê§ï¿½ï¿½
  */
 static uint8_t gif_dispimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y0, int Transparency, uint8_t Disposal)
 {
@@ -454,9 +455,9 @@ static uint8_t gif_dispimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y
     XEnd = Width + x0 - 1;
     bkcolor = gif->colortbl[gif->gifLSD.bkcindex];
     pTrans = (uint16_t *)gif->colortbl;
-    f_read(filename, &lzwlen, 1, (UINT *)&readed);  /* µÃµ½LZW³¤¶È */
+    f_read(filename, &lzwlen, 1, (UINT *)&readed);  /* ï¿½Ãµï¿½LZWï¿½ï¿½ï¿½ï¿½ */
     gif_initlzw(gif, lzwlen);                       /* Initialize the LZW stack with the LZW code size */
-    Interlace = gif->gifISD.flag & 0x40;            /* ÊÇ·ñ½»Ö¯±àÂë */
+    Interlace = gif->gifISD.flag & 0x40;            /* ï¿½Ç·ï¿½Ö¯ï¿½ï¿½ï¿½ï¿½ */
 
     for (YCnt = 0, YPos = y0, Pass = 0; YCnt < Height; YCnt++)
     {
@@ -537,7 +538,7 @@ static uint8_t gif_dispimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y
         }
 
         /* Adjust YPos if image is interlaced */
-        if (Interlace)   /* ½»Ö¯±àÂë */
+        if (Interlace)   /* ï¿½ï¿½Ö¯ï¿½ï¿½ï¿½ï¿½ */
         {
             YPos += _aInterlaceOffset[Pass];
 
@@ -557,18 +558,18 @@ static uint8_t gif_dispimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y
 }
 
 /**
- * @brief       »Ö¸´³É±³¾°É«
- * @param       x, y     : ×ø±ê
- * @param       gif      : GIFÐÅÏ¢
- * @param       pimge    : Í¼ÏñÃèÊö¿éÐÅÏ¢
- * @retval      ÎÞ
+ * @brief       ï¿½Ö¸ï¿½ï¿½É±ï¿½ï¿½ï¿½É«
+ * @param       x, y     : ï¿½ï¿½ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @param       pimge    : Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+ * @retval      ï¿½ï¿½
  */
 static void gif_clear2bkcolor(uint16_t x, uint16_t y, gif89a *gif, ImageScreenDescriptor pimge)
 {
     uint16_t x0, y0, x1, y1;
     uint16_t color = gif->colortbl[gif->gifLSD.bkcindex];
 
-    if (pimge.width == 0 || pimge.height == 0)return; /* Ö±½Ó²»ÓÃÇå³ýÁË,Ô­À´Ã»ÓÐÍ¼Ïñ!! */
+    if (pimge.width == 0 || pimge.height == 0)return; /* Ö±ï¿½Ó²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,Ô­ï¿½ï¿½Ã»ï¿½ï¿½Í¼ï¿½ï¿½!! */
 
     if (gif->gifISD.yoff > pimge.yoff)
     {
@@ -579,7 +580,7 @@ static void gif_clear2bkcolor(uint16_t x, uint16_t y, gif89a *gif, ImageScreenDe
 
         if (x0 < x1 && y0 < y1 && x1 < 320 && y1 < 320)
         {
-            pic_phy.fill(x0, y0, x1, y1, color); /* Éè¶¨xy,µÄ·¶Î§²»ÄÜÌ«´ó */
+            pic_phy.fill(x0, y0, x1, y1, color); /* ï¿½è¶¨xy,ï¿½Ä·ï¿½Î§ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½ */
         }
     }
 
@@ -624,14 +625,14 @@ static void gif_clear2bkcolor(uint16_t x, uint16_t y, gif89a *gif, ImageScreenDe
 }
 
 /**
- * @brief       »­GIFÍ¼ÏñµÄÒ»Ö¡
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû(.gif)
- * @param       gif      : GIFÐÅÏ¢
- * @param       x0, y0   : ¿ªÊ¼ÏÔÊ¾µÄ×ø±ê
- * @param       gif      : GIFÐÅÏ¢
- * @retval      ²Ù×÷½á¹û
- *   @arg       0   , ³É¹¦
- *   @arg       ÆäËû, ´íÎóÂë
+ * @brief       ï¿½ï¿½GIFÍ¼ï¿½ï¿½ï¿½Ò»Ö¡
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½(.gif)
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @param       x0, y0   : ï¿½ï¿½Ê¼ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *   @arg       0   , ï¿½É¹ï¿½
+ *   @arg       ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 static uint8_t gif_drawimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y0)
 {
@@ -647,28 +648,28 @@ static uint8_t gif_drawimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y
 
     do
     {
-        res = f_read(filename, &Introducer, 1, (UINT *)&readed);                        /* ¶ÁÈ¡Ò»¸ö×Ö½Ú */
+        res = f_read(filename, &Introducer, 1, (UINT *)&readed);                        /* ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½Ö½ï¿½ */
 
         if (res)return 1;
 
         switch (Introducer)
         {
-            case GIF_INTRO_IMAGE:                                                       /* Í¼ÏñÃèÊö */
+            case GIF_INTRO_IMAGE:                                                       /* Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                 previmg.xoff = gif->gifISD.xoff;
                 previmg.yoff = gif->gifISD.yoff;
                 previmg.width = gif->gifISD.width;
                 previmg.height = gif->gifISD.height;
 
-                res = f_read(filename, (uint8_t *)&gif->gifISD, 9, (UINT *)&readed);    /* ¶ÁÈ¡Ò»¸ö×Ö½Ú */
+                res = f_read(filename, (uint8_t *)&gif->gifISD, 9, (UINT *)&readed);    /* ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½Ö½ï¿½ */
 
                 if (res)return 1;
 
-                if (gif->gifISD.flag & 0x80)                                            /* ´æÔÚ¾Ö²¿ÑÕÉ«±í */
+                if (gif->gifISD.flag & 0x80)                                            /* ï¿½ï¿½ï¿½Ú¾Ö²ï¿½ï¿½ï¿½É«ï¿½ï¿½ */
                 {
-                    gif_savegctbl(gif);                                                 /* ±£´æÈ«¾ÖÑÕÉ«±í */
-                    numcolors = 2 << (gif->gifISD.flag & 0X07);                         /* µÃµ½¾Ö²¿ÑÕÉ«±í´óÐ¡ */
+                    gif_savegctbl(gif);                                                 /* ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ */
+                    numcolors = 2 << (gif->gifISD.flag & 0X07);                         /* ï¿½Ãµï¿½ï¿½Ö²ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
-                    if (gif_readcolortbl(filename, gif, numcolors))return 1;            /* ¶Á´íÎó */
+                    if (gif_readcolortbl(filename, gif, numcolors))return 1;            /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
                 }
 
                 if (Disposal == 2)gif_clear2bkcolor(x0, y0, gif, previmg);
@@ -677,25 +678,25 @@ static uint8_t gif_drawimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y
 
                 while (1)
                 {
-                    f_read(filename, &temp, 1, (UINT *)&readed);                        /* ¶ÁÈ¡Ò»¸ö×Ö½Ú */
+                    f_read(filename, &temp, 1, (UINT *)&readed);                        /* ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½Ö½ï¿½ */
 
                     if (temp == 0)break;
 
-                    readed = f_tell(filename);                                          /* »¹´æÔÚ¿é */
+                    readed = f_tell(filename);                                          /* ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ */
 
-                    if (f_lseek(filename, readed + temp))break;                         /* ¼ÌÐøÏòºóÆ«ÒÆ */
+                    if (f_lseek(filename, readed + temp))break;                         /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ */
                 }
 
                 if (temp != 0)return 1;                                                 /* Error */
 
                 return 0;
 
-            case GIF_INTRO_TERMINATOR:                                                  /* µÃµ½½áÊø·ûÁË */
-                return 2;                                                               /* ´ú±íÍ¼Ïñ½âÂëÍê³ÉÁË */
+            case GIF_INTRO_TERMINATOR:                                                  /* ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+                return 2;                                                               /* ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
             case GIF_INTRO_EXTENSION:
                 /* Read image extension*/
-                res = gif_readextension(filename, gif, &TransIndex, &Disposal);         /* ¶ÁÈ¡Í¼ÏñÀ©Õ¹¿éÏûÏ¢ */
+                res = gif_readextension(filename, gif, &TransIndex, &Disposal);         /* ï¿½ï¿½È¡Í¼ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½Ï¢ */
 
                 if (res)return 1;
 
@@ -704,15 +705,15 @@ static uint8_t gif_drawimage(FIL *filename, gif89a *gif, uint16_t x0, uint16_t y
             default:
                 return 1;
         }
-    } while (Introducer != GIF_INTRO_TERMINATOR);                                       /* ¶Áµ½½áÊø·ûÁË */
+    } while (Introducer != GIF_INTRO_TERMINATOR);                                       /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
     return 0;
 }
 
 /**
- * @brief       ÍË³öµ±Ç°½âÂë.
- * @param       ÎÞ
- * @retval      ÎÞ
+ * @brief       ï¿½Ë³ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½.
+ * @param       ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 void gif_quit(void)
 {
@@ -720,36 +721,36 @@ void gif_quit(void)
 }
 
 /**
- * @brief       ½âÂëÒ»¸ögifÎÄ¼þ
- *   @note      ±¾º¯Êý²»ÄÜÏÔÊ¾³ß´ç´óÓë¸ø¶¨³ß´çµÄgifÍ¼Æ¬!!!
- * @param       filename : °üº¬Â·¾¶µÄÎÄ¼þÃû(.gif)
- * @param       gif      : GIFÐÅÏ¢
- * @param       x, y     : ¿ªÊ¼ÏÔÊ¾µÄ×ø±ê
- * @param       width    : ÏÔÊ¾¿í¶È
- * @param       height   : ÏÔÊ¾¸ß¶È
- * @retval      ²Ù×÷½á¹û
- *   @arg       0   , ³É¹¦
- *   @arg       ÆäËû, ´íÎóÂë
+ * @brief       ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½gifï¿½Ä¼ï¿½
+ *   @note      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ß´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½ï¿½gifÍ¼Æ¬!!!
+ * @param       filename : ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½(.gif)
+ * @param       gif      : GIFï¿½ï¿½Ï¢
+ * @param       x, y     : ï¿½ï¿½Ê¼ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @param       width    : ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+ * @param       height   : ï¿½ï¿½Ê¾ï¿½ß¶ï¿½
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *   @arg       0   , ï¿½É¹ï¿½
+ *   @arg       ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 uint8_t gif_decode(const char *filename, uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
     uint8_t res = 0;
-    uint16_t dtime = 0;                         /* ½âÂëÑÓÊ± */
+    uint16_t dtime = 0;                         /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê± */
     gif89a *mygif89a;
     FIL *gfile;
     
-#if GIF_USE_MALLOC == 1                         /* ¶¨ÒåÊÇ·ñÊ¹ÓÃmalloc,ÕâÀïÎÒÃÇÑ¡ÔñÊ¹ÓÃmalloc */
+#if GIF_USE_MALLOC == 1                         /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ê¹ï¿½ï¿½malloc,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ê¹ï¿½ï¿½malloc */
     gfile = (FIL *)piclib_mem_malloc(sizeof(FIL));
 
-    if (gfile == NULL)res = PIC_MEM_ERR;        /* ÉêÇëÄÚ´æÊ§°Ü */
+    if (gfile == NULL)res = PIC_MEM_ERR;        /* ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ê§ï¿½ï¿½ */
 
     mygif89a = (gif89a *)piclib_mem_malloc(sizeof(gif89a));
 
-    if (mygif89a == NULL)res = PIC_MEM_ERR;     /* ÉêÇëÄÚ´æÊ§°Ü */
+    if (mygif89a == NULL)res = PIC_MEM_ERR;     /* ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ê§ï¿½ï¿½ */
 
     mygif89a->lzw = (LZW_INFO *)piclib_mem_malloc(sizeof(LZW_INFO));
 
-    if (mygif89a->lzw == NULL)res = PIC_MEM_ERR; /* ÉêÇëÄÚ´æÊ§°Ü */
+    if (mygif89a->lzw == NULL)res = PIC_MEM_ERR; /* ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ê§ï¿½ï¿½ */
 
 #else
     gfile = &f_gfile;
@@ -761,13 +762,13 @@ uint8_t gif_decode(const char *filename, uint16_t x, uint16_t y, uint16_t width,
     {
         res = f_open(gfile, (TCHAR *)filename, FA_READ);
 
-        if (res == 0)                           /* ´ò¿ªÎÄ¼þok */
+        if (res == 0)                           /* ï¿½ï¿½ï¿½Ä¼ï¿½ok */
         {
             if (gif_check_head(gfile))res = PIC_FORMAT_ERR;
 
             if (gif_getinfo(gfile, mygif89a))res = PIC_FORMAT_ERR;
 
-            if (mygif89a->gifLSD.width > width || mygif89a->gifLSD.height > height)res = PIC_SIZE_ERR;  /* ³ß´çÌ«´ó */
+            if (mygif89a->gifLSD.width > width || mygif89a->gifLSD.height > height)res = PIC_SIZE_ERR;  /* ï¿½ß´ï¿½Ì«ï¿½ï¿½ */
             else
             {
                 x = (width - mygif89a->gifLSD.width) / 2 + x;
@@ -776,24 +777,29 @@ uint8_t gif_decode(const char *filename, uint16_t x, uint16_t y, uint16_t width,
 
             g_gif_decoding = 1;
 
-            while (g_gif_decoding && res == 0)                                  /* ½âÂëÑ­»· */
+            while (g_gif_decoding && res == 0)                                  /* ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ */
             {
-                res = gif_drawimage(gfile, mygif89a, x, y);                     /* ÏÔÊ¾Ò»ÕÅÍ¼Æ¬ */
+                res = gif_drawimage(gfile, mygif89a, x, y);                     /* ï¿½ï¿½Ê¾Ò»ï¿½ï¿½Í¼Æ¬ */
 
-                if (mygif89a->gifISD.flag & 0x80)gif_recovergctbl(mygif89a);    /* »Ö¸´È«¾ÖÑÕÉ«±í */
+                if (res == 0)
+                {
+                    ltdc_present_draw_buffer();                                 /* Ë«ï¿½ï¿½ï¿½ï¿½Í£Ö¹Ö¸ï¿½ï¿½ */
+                }
+
+                if (mygif89a->gifISD.flag & 0x80)gif_recovergctbl(mygif89a);    /* ï¿½Ö¸ï¿½È«ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ */
 
                 if (mygif89a->delay)
                 {
-                    dtime = 2;                                    /* »ñÈ¡ÑÓÊ±Ê±¼ä(µ¥Î» 10ms) mygif89a->delay*/
+                    dtime = 2;                                    /* ï¿½ï¿½È¡ï¿½ï¿½Ê±Ê±ï¿½ï¿½(ï¿½ï¿½Î» 10ms) mygif89a->delay*/
                 }
                 else 
                 {
-                    dtime = 2;                                                 /* Ä¬ÈÏÑÓÊ±(100ms) */		//33
+                    dtime = 2;                                                 /* Ä¬ï¿½ï¿½ï¿½ï¿½Ê±(100ms) */		//33
                 }
                 
                 while (dtime-- && g_gif_decoding)
                 {
-                    delay_ms(10);                                               /* ÑÓ³Ù */
+                    delay_ms(10);                                               /* ï¿½Ó³ï¿½ */
                 }
                 
                 if (res == 2)
@@ -807,7 +813,7 @@ uint8_t gif_decode(const char *filename, uint16_t x, uint16_t y, uint16_t width,
         f_close(gfile);
     }
 
-#if GIF_USE_MALLOC == 1 /* ¶¨ÒåÊÇ·ñÊ¹ÓÃmalloc,ÕâÀïÎÒÃÇÑ¡ÔñÊ¹ÓÃmalloc */
+#if GIF_USE_MALLOC == 1 /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ê¹ï¿½ï¿½malloc,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ê¹ï¿½ï¿½malloc */
     piclib_mem_free(gfile);
     piclib_mem_free(mygif89a->lzw);
     piclib_mem_free(mygif89a);

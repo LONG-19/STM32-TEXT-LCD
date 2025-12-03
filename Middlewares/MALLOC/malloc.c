@@ -1,23 +1,23 @@
 /**
  ****************************************************************************************************
  * @file        malloc.c
- * @author      ÕýµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½Å¶ï¿½(ALIENTEK)
  * @version     V1.0
  * @date        2022-09-06
- * @brief       ÄÚ´æ¹ÜÀí Çý¶¯
- * @license     Copyright (c) 2020-2032, ¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+ * @brief       ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+ * @license     Copyright (c) 2020-2032, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Æ¼ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕýµãÔ­×Ó °¢²¨ÂÞ H743¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * Êµï¿½ï¿½Æ½Ì¨:ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ H743ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµ:www.yuanzige.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+ * ï¿½ï¿½Ë¾ï¿½ï¿½Ö·:www.alientek.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Ö·:openedv.taobao.com
  *
- * ÐÞ¸ÄËµÃ÷
+ * ï¿½Þ¸ï¿½Ëµï¿½ï¿½
  * V1.0 20220906
- * µÚÒ»´Î·¢²¼
+ * ï¿½ï¿½Ò»ï¿½Î·ï¿½ï¿½ï¿½
  *
  ****************************************************************************************************
  */
@@ -25,73 +25,78 @@
 #include "./MALLOC/malloc.h"
 
 
-#if !(__ARMCC_VERSION >= 6010050)   /* ²»ÊÇAC6±àÒëÆ÷£¬¼´Ê¹ÓÃAC5±àÒëÆ÷Ê± */
+#if !(__ARMCC_VERSION >= 6010050)   /* ï¿½ï¿½ï¿½ï¿½AC6ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½AC5ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê± */
 
-/* ÄÚ´æ³Ø(64×Ö½Ú¶ÔÆë) */
-static __align(64) uint8_t mem1base[MEM1_MAX_SIZE];                                                           /* ÄÚ²¿SRAMÄÚ´æ³Ø */
-static __align(64) uint8_t mem2base[MEM2_MAX_SIZE] __attribute__((at(0XC01F4000)));                           /* Íâ²¿SDRAMÄÚ´æ³Ø,Ç°Ãæ2M¸øLTDCÓÃÁË(1280*800*2) */
-static __align(64) uint8_t mem3base[MEM3_MAX_SIZE] __attribute__((at(0x30000000)));                           /* ÄÚ²¿SRAM1+SRAM2ÄÚ´æ³Ø */
-static __align(64) uint8_t mem4base[MEM4_MAX_SIZE] __attribute__((at(0x38000000)));                           /* ÄÚ²¿SRAM4ÄÚ´æ³Ø */
-static __align(64) uint8_t mem5base[MEM5_MAX_SIZE] __attribute__((at(0x20000000)));                           /* ÄÚ²¿DTCMÄÚ´æ³Ø */
-static __align(64) uint8_t mem6base[MEM6_MAX_SIZE] __attribute__((at(0x00000000)));                           /* ÄÚ²¿ITCMÄÚ´æ³Ø  */
+/* ï¿½Ú´ï¿½ï¿½(64ï¿½Ö½Ú¶ï¿½ï¿½ï¿½)
+ * SDRAM ï¿½ï¿½ï¿½ï¿½:
+ *  - 0xC0000000 ~ 0xC01F3FFF : LTDC ï¿½ï¿½Ò»Ö¡ï¿½ï¿½ï¿½ï¿½ (1280x800x2 ï¿½ï¿½RGB565ï¿½ï¿½)
+ *  - 0xC01F4000 ~ 0xC03E7FFF : LTDC ï¿½Ú¶ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½ (Ë«ï¿½ï¿½ï¿½ï¿½)
+ *  - 0xC03E8000 ~            : mem2base (SDRAM ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+ */
+static __align(64) uint8_t mem1base[MEM1_MAX_SIZE];                                                           /* ï¿½Ú²ï¿½SRAMï¿½Ú´ï¿½ï¿½ */
+static __align(64) uint8_t mem2base[MEM2_MAX_SIZE] __attribute__((at(0XC03E8000)));                           /* ï¿½â²¿SDRAMï¿½Ú´ï¿½ï¿½,Ç°4Mï¿½ï¿½ï¿½ï¿½LTDCË«ï¿½ï¿½ï¿½ï¿½ */
+static __align(64) uint8_t mem3base[MEM3_MAX_SIZE] __attribute__((at(0x30000000)));                           /* ï¿½Ú²ï¿½SRAM1+SRAM2ï¿½Ú´ï¿½ï¿½ */
+static __align(64) uint8_t mem4base[MEM4_MAX_SIZE] __attribute__((at(0x38000000)));                           /* ï¿½Ú²ï¿½SRAM4ï¿½Ú´ï¿½ï¿½ */
+static __align(64) uint8_t mem5base[MEM5_MAX_SIZE] __attribute__((at(0x20000000)));                           /* ï¿½Ú²ï¿½DTCMï¿½Ú´ï¿½ï¿½ */
+static __align(64) uint8_t mem6base[MEM6_MAX_SIZE] __attribute__((at(0x00000000)));                           /* ï¿½Ú²ï¿½ITCMï¿½Ú´ï¿½ï¿½  */
 
-/* ÄÚ´æ¹ÜÀí±í */
-static MT_TYPE mem1mapbase[MEM1_ALLOC_TABLE_SIZE];                                                            /* ÄÚ²¿SRAMÄÚ´æ³ØMAP */
-static MT_TYPE mem2mapbase[MEM2_ALLOC_TABLE_SIZE] __attribute__((at(0XC01F4000 + MEM2_MAX_SIZE)));            /* Íâ²¿SDRAMÄÚ´æ³ØMAP */
-static MT_TYPE mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((at(0x30000000 + MEM3_MAX_SIZE)));            /* ÄÚ²¿SRAM1+SRAM2ÄÚ´æ³ØMAP */
-static MT_TYPE mem4mapbase[MEM4_ALLOC_TABLE_SIZE] __attribute__((at(0x38000000 + MEM4_MAX_SIZE)));            /* ÄÚ²¿SRAM4ÄÚ´æ³ØMAP */
-static MT_TYPE mem5mapbase[MEM5_ALLOC_TABLE_SIZE] __attribute__((at(0x20000000 + MEM5_MAX_SIZE)));            /* ÄÚ²¿DTCMÄÚ´æ³ØMAP */
-static MT_TYPE mem6mapbase[MEM6_ALLOC_TABLE_SIZE] __attribute__((at(0x00000000 + MEM6_MAX_SIZE)));            /* ÄÚ²¿ITCMÄÚ´æ³ØMAP */
+/* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+static MT_TYPE mem1mapbase[MEM1_ALLOC_TABLE_SIZE];                                                            /* ï¿½Ú²ï¿½SRAMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem2mapbase[MEM2_ALLOC_TABLE_SIZE] __attribute__((at(0XC03E8000 + MEM2_MAX_SIZE)));            /* ï¿½â²¿SDRAMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((at(0x30000000 + MEM3_MAX_SIZE)));            /* ï¿½Ú²ï¿½SRAM1+SRAM2ï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem4mapbase[MEM4_ALLOC_TABLE_SIZE] __attribute__((at(0x38000000 + MEM4_MAX_SIZE)));            /* ï¿½Ú²ï¿½SRAM4ï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem5mapbase[MEM5_ALLOC_TABLE_SIZE] __attribute__((at(0x20000000 + MEM5_MAX_SIZE)));            /* ï¿½Ú²ï¿½DTCMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem6mapbase[MEM6_ALLOC_TABLE_SIZE] __attribute__((at(0x00000000 + MEM6_MAX_SIZE)));            /* ï¿½Ú²ï¿½ITCMï¿½Ú´ï¿½ï¿½MAP */
 
-#else      /* Ê¹ÓÃAC6±àÒëÆ÷Ê± */
+#else      /* Ê¹ï¿½ï¿½AC6ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê± */
 
-/* ÄÚ´æ³Ø(64×Ö½Ú¶ÔÆë) */
-static __ALIGNED(64) uint8_t mem1base[MEM1_MAX_SIZE];                                                         /* ÄÚ²¿SRAMÄÚ´æ³Ø */
-static __ALIGNED(64) uint8_t mem2base[MEM2_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0XC01F4000")));    /* Íâ²¿SDRAMÄÚ´æ³Ø,Ç°Ãæ2M¸øLTDCÓÃÁË(1280*800*2) */
-static __ALIGNED(64) uint8_t mem3base[MEM3_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x30000000")));    /* ÄÚ²¿SRAM1+SRAM2ÄÚ´æ³Ø */
-static __ALIGNED(64) uint8_t mem4base[MEM4_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x38000000")));    /* ÄÚ²¿SRAM4ÄÚ´æ³Ø */
-static __ALIGNED(64) uint8_t mem5base[MEM5_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x20000000")));    /* ÄÚ²¿DTCMÄÚ´æ³Ø */
-static __ALIGNED(64) uint8_t mem6base[MEM6_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x00000000")));    /* ÄÚ²¿ITCMÄÚ´æ³Ø */
+/* ï¿½Ú´ï¿½ï¿½(64ï¿½Ö½Ú¶ï¿½ï¿½ï¿½) */
+static __ALIGNED(64) uint8_t mem1base[MEM1_MAX_SIZE];                                                         /* ï¿½Ú²ï¿½SRAMï¿½Ú´ï¿½ï¿½ */
+static __ALIGNED(64) uint8_t mem2base[MEM2_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0XC01F4000")));    /* ï¿½â²¿SDRAMï¿½Ú´ï¿½ï¿½,Ç°ï¿½ï¿½2Mï¿½ï¿½LTDCï¿½ï¿½ï¿½ï¿½(1280*800*2) */
+static __ALIGNED(64) uint8_t mem3base[MEM3_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x30000000")));    /* ï¿½Ú²ï¿½SRAM1+SRAM2ï¿½Ú´ï¿½ï¿½ */
+static __ALIGNED(64) uint8_t mem4base[MEM4_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x38000000")));    /* ï¿½Ú²ï¿½SRAM4ï¿½Ú´ï¿½ï¿½ */
+static __ALIGNED(64) uint8_t mem5base[MEM5_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x20000000")));    /* ï¿½Ú²ï¿½DTCMï¿½Ú´ï¿½ï¿½ */
+static __ALIGNED(64) uint8_t mem6base[MEM6_MAX_SIZE] __attribute__((section(".bss.ARM.__at_0x00000000")));    /* ï¿½Ú²ï¿½ITCMï¿½Ú´ï¿½ï¿½ */
 
-/* ÄÚ´æ¹ÜÀí±í */
-static MT_TYPE mem1mapbase[MEM1_ALLOC_TABLE_SIZE];                                                            /* ÄÚ²¿SRAMÄÚ´æ³ØMAP */
-static MT_TYPE mem2mapbase[MEM2_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0XC1E30000")));       /* ÄÚ²¿CCMÄÚ´æ³ØMAP */
-static MT_TYPE mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X3003C000")));       /* Íâ²¿SRAMÄÚ´æ³ØMAP */
-static MT_TYPE mem4mapbase[MEM4_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X3800F000")));       /* ÄÚ²¿CCMÄÚ´æ³ØMAP */
-static MT_TYPE mem5mapbase[MEM5_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X2001E000")));       /* Íâ²¿SRAMÄÚ´æ³ØMAP */
-static MT_TYPE mem6mapbase[MEM6_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X0000F000")));       /* ÄÚ²¿CCMÄÚ´æ³ØMAP */
+/* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+static MT_TYPE mem1mapbase[MEM1_ALLOC_TABLE_SIZE];                                                            /* ï¿½Ú²ï¿½SRAMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem2mapbase[MEM2_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0XC1E30000")));       /* ï¿½Ú²ï¿½CCMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X3003C000")));       /* ï¿½â²¿SRAMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem4mapbase[MEM4_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X3800F000")));       /* ï¿½Ú²ï¿½CCMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem5mapbase[MEM5_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X2001E000")));       /* ï¿½â²¿SRAMï¿½Ú´ï¿½ï¿½MAP */
+static MT_TYPE mem6mapbase[MEM6_ALLOC_TABLE_SIZE] __attribute__((section(".bss.ARM.__at_0X0000F000")));       /* ï¿½Ú²ï¿½CCMï¿½Ú´ï¿½ï¿½MAP */
 
 #endif
 
-/* ÄÚ´æ¹ÜÀí²ÎÊý */
+/* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 const uint32_t memtblsize[SRAMBANK] = { MEM1_ALLOC_TABLE_SIZE, MEM2_ALLOC_TABLE_SIZE, MEM3_ALLOC_TABLE_SIZE,
                                         MEM4_ALLOC_TABLE_SIZE, MEM5_ALLOC_TABLE_SIZE, MEM6_ALLOC_TABLE_SIZE
-                                      };  /* ÄÚ´æ±í´óÐ¡ */
+                                      };  /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
 const uint32_t memblksize[SRAMBANK] = { MEM1_BLOCK_SIZE, MEM2_BLOCK_SIZE, MEM3_BLOCK_SIZE,
                                         MEM4_BLOCK_SIZE, MEM5_BLOCK_SIZE, MEM6_BLOCK_SIZE
-                                      };  /* ÄÚ´æ·Ö¿é´óÐ¡ */
+                                      };  /* ï¿½Ú´ï¿½Ö¿ï¿½ï¿½Ð¡ */
 
 const uint32_t memsize[SRAMBANK] = { MEM1_MAX_SIZE, MEM2_MAX_SIZE, MEM3_MAX_SIZE,
                                      MEM4_MAX_SIZE, MEM5_MAX_SIZE, MEM6_MAX_SIZE
-                                   };     /* ÄÚ´æ×Ü´óÐ¡ */
+                                   };     /* ï¿½Ú´ï¿½ï¿½Ü´ï¿½Ð¡ */
 
-/* ÄÚ´æ¹ÜÀí¿ØÖÆÆ÷ */
+/* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 struct _m_mallco_dev mallco_dev=
 {
-    my_mem_init,                                                                         /* ÄÚ´æ³õÊ¼»¯ */
-    my_mem_perused,                                                                      /* ÄÚ´æÊ¹ÓÃÂÊ */
-    mem1base, mem2base, mem3base, mem4base, mem5base, mem6base,                          /* ÄÚ´æ³Ø */
-    mem1mapbase, mem2mapbase, mem3mapbase, mem4mapbase, mem5mapbase, mem6mapbase,        /* ÄÚ´æ¹ÜÀí×´Ì¬±í */
-    0, 0, 0, 0, 0, 0,                                                                    /* ÄÚ´æ¹ÜÀíÎ´¾ÍÐ÷ */
+    my_mem_init,                                                                         /* ï¿½Ú´ï¿½ï¿½Ê¼ï¿½ï¿½ */
+    my_mem_perused,                                                                      /* ï¿½Ú´ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ */
+    mem1base, mem2base, mem3base, mem4base, mem5base, mem6base,                          /* ï¿½Ú´ï¿½ï¿½ */
+    mem1mapbase, mem2mapbase, mem3mapbase, mem4mapbase, mem5mapbase, mem6mapbase,        /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ */
+    0, 0, 0, 0, 0, 0,                                                                    /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ */
 };
 
 /**
- * @brief       ¸´ÖÆÄÚ´æ
- * @param       *des : Ä¿µÄµØÖ·
- * @param       *src : Ô´µØÖ·
- * @param       n    : ÐèÒª¸´ÖÆµÄÄÚ´æ³¤¶È(×Ö½ÚÎªµ¥Î»)
- * @retval      ÎÞ
+ * @brief       ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½
+ * @param       *des : Ä¿ï¿½Äµï¿½Ö·
+ * @param       *src : Ô´ï¿½ï¿½Ö·
+ * @param       n    : ï¿½ï¿½Òªï¿½ï¿½ï¿½Æµï¿½ï¿½Ú´æ³¤ï¿½ï¿½(ï¿½Ö½ï¿½Îªï¿½ï¿½Î»)
+ * @retval      ï¿½ï¿½
  */
 void my_mem_copy(void *des, void *src, uint32_t n)  
 {  
@@ -101,11 +106,11 @@ void my_mem_copy(void *des, void *src, uint32_t n)
 }  
 
 /**
- * @brief       ÉèÖÃÄÚ´æÖµ
- * @param       *s    : ÄÚ´æÊ×µØÖ·
- * @param       c     : ÒªÉèÖÃµÄÖµ
- * @param       count : ÐèÒªÉèÖÃµÄÄÚ´æ´óÐ¡(×Ö½ÚÎªµ¥Î»)
- * @retval      ÎÞ
+ * @brief       ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Öµ
+ * @param       *s    : ï¿½Ú´ï¿½ï¿½×µï¿½Ö·
+ * @param       c     : Òªï¿½ï¿½ï¿½Ãµï¿½Öµ
+ * @param       count : ï¿½ï¿½Òªï¿½ï¿½ï¿½Ãµï¿½ï¿½Ú´ï¿½ï¿½Ð¡(ï¿½Ö½ï¿½Îªï¿½ï¿½Î»)
+ * @retval      ï¿½ï¿½
  */
 void my_mem_set(void *s, uint8_t c, uint32_t count)  
 {  
@@ -114,20 +119,20 @@ void my_mem_set(void *s, uint8_t c, uint32_t count)
 }  
 
 /**
- * @brief       ÄÚ´æ¹ÜÀí³õÊ¼»¯
- * @param       memx : ËùÊôÄÚ´æ¿é
- * @retval      ÎÞ
+ * @brief       ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+ * @param       memx : ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 void my_mem_init(uint8_t memx)  
 {  
-    my_mem_set(mallco_dev.memmap[memx], 0, memtblsize[memx] * 4);  /* ÄÚ´æ×´Ì¬±íÊý¾ÝÇåÁã */
-    mallco_dev.memrdy[memx] = 1;                                   /* ÄÚ´æ¹ÜÀí³õÊ¼»¯OK */
+    my_mem_set(mallco_dev.memmap[memx], 0, memtblsize[memx] * 4);  /* ï¿½Ú´ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    mallco_dev.memrdy[memx] = 1;                                   /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½OK */
 }
 
 /**
- * @brief       »ñÈ¡ÄÚ´æÊ¹ÓÃÂÊ
- * @param       memx : ËùÊôÄÚ´æ¿é
- * @retval      Ê¹ÓÃÂÊ(À©´óÁË10±¶,0~1000,´ú±í0.0%~100.0%)
+ * @brief       ï¿½ï¿½È¡ï¿½Ú´ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½
+ * @param       memx : ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
+ * @retval      Ê¹ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½10ï¿½ï¿½,0~1000,ï¿½ï¿½ï¿½ï¿½0.0%~100.0%)
  */
 uint16_t my_mem_perused(uint8_t memx)  
 {  
@@ -146,86 +151,86 @@ uint16_t my_mem_perused(uint8_t memx)
 }
 
 /**
- * @brief       ÄÚ´æ·ÖÅä(ÄÚ²¿µ÷ÓÃ)
- * @param       memx : ËùÊôÄÚ´æ¿é
- * @param       size : Òª·ÖÅäµÄÄÚ´æ´óÐ¡(×Ö½Ú)
- * @retval      ÄÚ´æÆ«ÒÆµØÖ·
- *   @arg       0 ~ 0xFFFFFFFE : ÓÐÐ§µÄÄÚ´æÆ«ÒÆµØÖ·
- *   @arg       0xFFFFFFFF     : ÎÞÐ§µÄÄÚ´æÆ«ÒÆµØÖ·
+ * @brief       ï¿½Ú´ï¿½ï¿½ï¿½ï¿½(ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½)
+ * @param       memx : ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
+ * @param       size : Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ð¡(ï¿½Ö½ï¿½)
+ * @retval      ï¿½Ú´ï¿½Æ«ï¿½Æµï¿½Ö·
+ *   @arg       0 ~ 0xFFFFFFFE : ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Ú´ï¿½Æ«ï¿½Æµï¿½Ö·
+ *   @arg       0xFFFFFFFF     : ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Ú´ï¿½Æ«ï¿½Æµï¿½Ö·
  */
 uint32_t my_mem_malloc(uint8_t memx, uint32_t size)  
 {  
     signed long offset = 0;  
-    uint32_t nmemb;                                             /* ÐèÒªµÄÄÚ´æ¿éÊý */
-    uint32_t cmemb = 0;                                         /* Á¬Ðø¿ÕÄÚ´æ¿éÊý */
+    uint32_t nmemb;                                             /* ï¿½ï¿½Òªï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ */
+    uint32_t cmemb = 0;                                         /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ */
     uint32_t i;
 
     if (!mallco_dev.memrdy[memx])
     {
-        mallco_dev.init(memx);                                  /* Î´³õÊ¼»¯,ÏÈÖ´ÐÐ³õÊ¼»¯ */
+        mallco_dev.init(memx);                                  /* Î´ï¿½ï¿½Ê¼ï¿½ï¿½,ï¿½ï¿½Ö´ï¿½Ð³ï¿½Ê¼ï¿½ï¿½ */
     }
 
     if (size == 0)
     {
-        return 0XFFFFFFFF;                                      /* ²»ÐèÒª·ÖÅä */
+        return 0XFFFFFFFF;                                      /* ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ */
     }
-    nmemb = size / memblksize[memx];                            /* »ñÈ¡ÐèÒª·ÖÅäµÄÁ¬ÐøÄÚ´æ¿éÊý */
+    nmemb = size / memblksize[memx];                            /* ï¿½ï¿½È¡ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ */
 
     if (size % memblksize[memx]) 
     {
         nmemb++;
     }
 
-    for (offset = memtblsize[memx] - 1;offset >= 0; offset--)   /* ËÑË÷Õû¸öÄÚ´æ¿ØÖÆÇø */
+    for (offset = memtblsize[memx] - 1;offset >= 0; offset--)   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     {
         if (!mallco_dev.memmap[memx][offset])
         {
-            cmemb++;                                            /* Á¬Ðø¿ÕÄÚ´æ¿éÊýÔö¼Ó */
+            cmemb++;                                            /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         }
         else 
         {
-            cmemb = 0;                                          /* Á¬ÐøÄÚ´æ¿éÇåÁã */
+            cmemb = 0;                                          /* ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         }
 
-        if (cmemb == nmemb)                                     /* ÕÒµ½ÁËÁ¬Ðønmemb¸ö¿ÕÄÚ´æ¿é */
+        if (cmemb == nmemb)                                     /* ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nmembï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ */
         {
-            for (i = 0; i < nmemb; i++)                         /* ±ê×¢ÄÚ´æ¿é·Ç¿Õ  */
+            for (i = 0; i < nmemb; i++)                         /* ï¿½ï¿½×¢ï¿½Ú´ï¿½ï¿½Ç¿ï¿½  */
             {  
                 mallco_dev.memmap[memx][offset + i] = nmemb;  
             }
 
-            return (offset * memblksize[memx]);                 /* ·µ»ØÆ«ÒÆµØÖ·  */
+            return (offset * memblksize[memx]);                 /* ï¿½ï¿½ï¿½ï¿½Æ«ï¿½Æµï¿½Ö·  */
         }
     }
 
-    return 0XFFFFFFFF;                                          /* Î´ÕÒµ½·ûºÏ·ÖÅäÌõ¼þµÄÄÚ´æ¿é */
+    return 0XFFFFFFFF;                                          /* Î´ï¿½Òµï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ */
 }
 
 /**
- * @brief       ÊÍ·ÅÄÚ´æ(ÄÚ²¿µ÷ÓÃ)
- * @param       memx   : ËùÊôÄÚ´æ¿é
- * @param       offset : ÄÚ´æµØÖ·Æ«ÒÆ
- * @retval      ÊÍ·Å½á¹û
- *   @arg       0, ÊÍ·Å³É¹¦;
- *   @arg       1, ÊÍ·ÅÊ§°Ü;
- *   @arg       2, ³¬ÇøÓòÁË(Ê§°Ü);
+ * @brief       ï¿½Í·ï¿½ï¿½Ú´ï¿½(ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½)
+ * @param       memx   : ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
+ * @param       offset : ï¿½Ú´ï¿½ï¿½Ö·Æ«ï¿½ï¿½
+ * @retval      ï¿½Í·Å½ï¿½ï¿½
+ *   @arg       0, ï¿½Í·Å³É¹ï¿½;
+ *   @arg       1, ï¿½Í·ï¿½Ê§ï¿½ï¿½;
+ *   @arg       2, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(Ê§ï¿½ï¿½);
  */
 uint8_t my_mem_free(uint8_t memx, uint32_t offset)
 {
     int i;
 
-    if (!mallco_dev.memrdy[memx])                   /* Î´³õÊ¼»¯,ÏÈÖ´ÐÐ³õÊ¼»¯ */
+    if (!mallco_dev.memrdy[memx])                   /* Î´ï¿½ï¿½Ê¼ï¿½ï¿½,ï¿½ï¿½Ö´ï¿½Ð³ï¿½Ê¼ï¿½ï¿½ */
     {
         mallco_dev.init(memx);
-        return 1;                                   /* Î´³õÊ¼»¯ */
+        return 1;                                   /* Î´ï¿½ï¿½Ê¼ï¿½ï¿½ */
     }
 
-    if (offset < memsize[memx])                     /* Æ«ÒÆÔÚÄÚ´æ³ØÄÚ. */
+    if (offset < memsize[memx])                     /* Æ«ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½. */
     {
-        int index = offset / memblksize[memx];      /* Æ«ÒÆËùÔÚÄÚ´æ¿éºÅÂë */
-        int nmemb = mallco_dev.memmap[memx][index]; /* ÄÚ´æ¿éÊýÁ¿ */
+        int index = offset / memblksize[memx];      /* Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        int nmemb = mallco_dev.memmap[memx][index]; /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
-        for (i = 0; i < nmemb; i++)                 /* ÄÚ´æ¿éÇåÁã */
+        for (i = 0; i < nmemb; i++)                 /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         {
             mallco_dev.memmap[memx][index + i] = 0;
         }
@@ -234,15 +239,15 @@ uint8_t my_mem_free(uint8_t memx, uint32_t offset)
     }
     else
     {
-        return 2;                                  /* Æ«ÒÆ³¬ÇøÁË. */
+        return 2;                                  /* Æ«ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½. */
     }
 }
 
 /**
- * @brief       ÊÍ·ÅÄÚ´æ(Íâ²¿µ÷ÓÃ)
- * @param       memx : ËùÊôÄÚ´æ¿é
- * @param       ptr  : ÄÚ´æÊ×µØÖ·
- * @retval      ÎÞ
+ * @brief       ï¿½Í·ï¿½ï¿½Ú´ï¿½(ï¿½â²¿ï¿½ï¿½ï¿½ï¿½)
+ * @param       memx : ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
+ * @param       ptr  : ï¿½Ú´ï¿½ï¿½×µï¿½Ö·
+ * @retval      ï¿½ï¿½
  */
 void myfree(uint8_t memx, void *ptr)
 {
@@ -250,55 +255,55 @@ void myfree(uint8_t memx, void *ptr)
 
     if (ptr == NULL)
     {
-        return;     /* µØÖ·Îª0. */
+        return;     /* ï¿½ï¿½Ö·Îª0. */
     }
 
     offset = (uint32_t)ptr - (uint32_t)mallco_dev.membase[memx];
-    my_mem_free(memx, offset);  /* ÊÍ·ÅÄÚ´æ */
+    my_mem_free(memx, offset);  /* ï¿½Í·ï¿½ï¿½Ú´ï¿½ */
 }
 
 /**
- * @brief       ·ÖÅäÄÚ´æ(Íâ²¿µ÷ÓÃ)
- * @param       memx : ËùÊôÄÚ´æ¿é
- * @param       size : Òª·ÖÅäµÄÄÚ´æ´óÐ¡(×Ö½Ú)
- * @retval      ·ÖÅäµ½µÄÄÚ´æÊ×µØÖ·.
+ * @brief       ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½(ï¿½â²¿ï¿½ï¿½ï¿½ï¿½)
+ * @param       memx : ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
+ * @param       size : Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ð¡(ï¿½Ö½ï¿½)
+ * @retval      ï¿½ï¿½ï¿½äµ½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½×µï¿½Ö·.
  */
 void *mymalloc(uint8_t memx, uint32_t size)
 {
     uint32_t offset;
     offset = my_mem_malloc(memx, size);
 
-    if (offset == 0xFFFFFFFF)   /* ÉêÇë³ö´í */
+    if (offset == 0xFFFFFFFF)   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     {
-        return NULL;            /* ·µ»Ø¿Õ(0) */
+        return NULL;            /* ï¿½ï¿½ï¿½Ø¿ï¿½(0) */
     }
-    else                        /* ÉêÇëÃ»ÎÊÌâ, ·µ»ØÊ×µØÖ· */
+    else                        /* ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½×µï¿½Ö· */
     {
         return (void *)((uint32_t)mallco_dev.membase[memx] + offset);
     }
 }
 
 /**
- * @brief       ÖØÐÂ·ÖÅäÄÚ´æ(Íâ²¿µ÷ÓÃ)
- * @param       memx : ËùÊôÄÚ´æ¿é
- * @param       *ptr : ¾ÉÄÚ´æÊ×µØÖ·
- * @param       size : Òª·ÖÅäµÄÄÚ´æ´óÐ¡(×Ö½Ú)
- * @retval      ÐÂ·ÖÅäµ½µÄÄÚ´æÊ×µØÖ·.
+ * @brief       ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Ú´ï¿½(ï¿½â²¿ï¿½ï¿½ï¿½ï¿½)
+ * @param       memx : ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
+ * @param       *ptr : ï¿½ï¿½ï¿½Ú´ï¿½ï¿½×µï¿½Ö·
+ * @param       size : Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ð¡(ï¿½Ö½ï¿½)
+ * @retval      ï¿½Â·ï¿½ï¿½äµ½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½×µï¿½Ö·.
  */
 void *myrealloc(uint8_t memx, void *ptr, uint32_t size)
 {
     uint32_t offset;
     offset = my_mem_malloc(memx, size);
 
-    if (offset == 0xFFFFFFFF)                                                          /* ÉêÇë³ö´í */
+    if (offset == 0xFFFFFFFF)                                                          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     {
-        return NULL;                                                                   /* ·µ»Ø¿Õ(0) */
+        return NULL;                                                                   /* ï¿½ï¿½ï¿½Ø¿ï¿½(0) */
     }
-    else                                                                               /* ÉêÇëÃ»ÎÊÌâ, ·µ»ØÊ×µØÖ· */
+    else                                                                               /* ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½×µï¿½Ö· */
     {
-        my_mem_copy((void *)((uint32_t)mallco_dev.membase[memx] + offset), ptr, size); /* ¿½±´¾ÉÄÚ´æÄÚÈÝµ½ÐÂÄÚ´æ */
-        myfree(memx, ptr);                                                             /* ÊÍ·Å¾ÉÄÚ´æ */
-        return (void *)((uint32_t)mallco_dev.membase[memx] + offset);                  /* ·µ»ØÐÂÄÚ´æÊ×µØÖ· */
+        my_mem_copy((void *)((uint32_t)mallco_dev.membase[memx] + offset), ptr, size); /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½Ú´ï¿½ */
+        myfree(memx, ptr);                                                             /* ï¿½Í·Å¾ï¿½ï¿½Ú´ï¿½ */
+        return (void *)((uint32_t)mallco_dev.membase[memx] + offset);                  /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½×µï¿½Ö· */
     }
 }
 

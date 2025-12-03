@@ -1,23 +1,23 @@
 /**
  ****************************************************************************************************
  * @file        malloc.h
- * @author      ÕýµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½Å¶ï¿½(ALIENTEK)
  * @version     V1.0
  * @date        2022-09-06
- * @brief       ÄÚ´æ¹ÜÀí Çý¶¯
- * @license     Copyright (c) 2020-2032, ¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+ * @brief       ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+ * @license     Copyright (c) 2020-2032, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Æ¼ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕýµãÔ­×Ó °¢²¨ÂÞ H743¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * Êµï¿½ï¿½Æ½Ì¨:ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ H743ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµ:www.yuanzige.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+ * ï¿½ï¿½Ë¾ï¿½ï¿½Ö·:www.alientek.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Ö·:openedv.taobao.com
  *
- * ÐÞ¸ÄËµÃ÷
+ * ï¿½Þ¸ï¿½Ëµï¿½ï¿½
  * V1.0 20220906
- * µÚÒ»´Î·¢²¼
+ * ï¿½ï¿½Ò»ï¿½Î·ï¿½ï¿½ï¿½
  *
  ****************************************************************************************************
  */
@@ -31,74 +31,80 @@
 #define NULL 0
 #endif
 
-/* ¶¨ÒåÁù¸öÄÚ´æ³Ø */
-#define SRAMIN                  0                               /* AXIÄÚ´æ³Ø,AXI¹²512KB  */
-#define SRAMEX                  1                               /* Íâ²¿ÄÚ´æ³Ø(SDRAM),SDRAM¹²32MB */
-#define SRAM12                  2                               /* SRAM1/2/3ÄÚ´æ³Ø,SRAM1+SRAM2,¹²256KB */
-#define SRAM4                   3                               /* SRAM4ÄÚ´æ³Ø,SRAM4¹²64KB */
-#define SRAMDTCM                4                               /* DTCMÄÚ´æ³Ø,DTCM¹²128KB,´Ë²¿·ÖÄÚ´æ½öCPUºÍMDMA(Í¨¹ýAHBS)¿ÉÒÔ·ÃÎÊ!!!! */
-#define SRAMITCM                5                               /* ITCMÄÚ´æ³Ø,DTCM¹²64 KB,´Ë²¿·ÖÄÚ´æ½öCPUºÍMDMA(Í¨¹ýAHBS)¿ÉÒÔ·ÃÎÊ!!!! */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ */
+#define SRAMIN                  0                               /* AXIï¿½Ú´ï¿½ï¿½,AXIï¿½ï¿½512KB  */
+#define SRAMEX                  1                               /* ï¿½â²¿ï¿½Ú´ï¿½ï¿½(SDRAM),SDRAMï¿½ï¿½32MB */
+#define SRAM12                  2                               /* SRAM1/2/3ï¿½Ú´ï¿½ï¿½,SRAM1+SRAM2,ï¿½ï¿½256KB */
+#define SRAM4                   3                               /* SRAM4ï¿½Ú´ï¿½ï¿½,SRAM4ï¿½ï¿½64KB */
+#define SRAMDTCM                4                               /* DTCMï¿½Ú´ï¿½ï¿½,DTCMï¿½ï¿½128KB,ï¿½Ë²ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½CPUï¿½ï¿½MDMA(Í¨ï¿½ï¿½AHBS)ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½!!!! */
+#define SRAMITCM                5                               /* ITCMï¿½Ú´ï¿½ï¿½,DTCMï¿½ï¿½64 KB,ï¿½Ë²ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½CPUï¿½ï¿½MDMA(Í¨ï¿½ï¿½AHBS)ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½!!!! */
 
-#define SRAMBANK                6                               /* ¶¨ÒåÖ§³ÖµÄSRAM¿éÊý. */
+#define SRAMBANK                6                               /* ï¿½ï¿½ï¿½ï¿½Ö§ï¿½Öµï¿½SRAMï¿½ï¿½ï¿½ï¿½. */
 
-/* ¶¨ÒåÄÚ´æ¹ÜÀí±íÀàÐÍ,µ±ÍâÀ©SDRAMµÄÊ±ºò£¬±ØÐëÊ¹ÓÃuint32_tÀàÐÍ£¬·ñÔò¿ÉÒÔ¶¨Òå³Éuint16_t£¬ÒÔ½ÚÊ¡ÄÚ´æÕ¼ÓÃ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SDRAMï¿½ï¿½Ê±ï¿½ò£¬±ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½uint32_tï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½uint16_tï¿½ï¿½ï¿½Ô½ï¿½Ê¡ï¿½Ú´ï¿½Õ¼ï¿½ï¿½ */
 #define MT_TYPE     uint32_t
 
-/* mem1ÄÚ´æ²ÎÊýÉè¶¨.mem1ÊÇH7ÄÚ²¿µÄAXIÄÚ´æ. */
-#define MEM1_BLOCK_SIZE         64                              /* ÄÚ´æ¿é´óÐ¡Îª64×Ö½Ú */
-#define MEM1_MAX_SIZE           448 * 1024                      /* ×î´ó¹ÜÀíÄÚ´æ 448K,H7µÄAXIÄÚ´æ×Ü¹²512KB */
-#define MEM1_ALLOC_TABLE_SIZE   MEM1_MAX_SIZE / MEM1_BLOCK_SIZE /* ÄÚ´æ±í´óÐ¡ */
+/* mem1ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨.mem1ï¿½ï¿½H7ï¿½Ú²ï¿½ï¿½ï¿½AXIï¿½Ú´ï¿½. */
+#define MEM1_BLOCK_SIZE         64                              /* ï¿½Ú´ï¿½ï¿½ï¿½Ð¡Îª64ï¿½Ö½ï¿½ */
+#define MEM1_MAX_SIZE           448 * 1024                      /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ 448K,H7ï¿½ï¿½AXIï¿½Ú´ï¿½ï¿½Ü¹ï¿½512KB */
+#define MEM1_ALLOC_TABLE_SIZE   MEM1_MAX_SIZE / MEM1_BLOCK_SIZE /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
-/* mem2ÄÚ´æ²ÎÊýÉè¶¨.mem2ÊÇÍâ²¿µÄSDRAMÄÚ´æ */
-#define MEM2_BLOCK_SIZE         64                              /* ÄÚ´æ¿é´óÐ¡Îª64×Ö½Ú */
-#define MEM2_MAX_SIZE           28912 * 1024                    /* ×î´ó¹ÜÀíÄÚ´æ28912K,ÍâÀ©SDRAM×Ü¹²32MB,LTDCÕ¼ÁË2MB,»¹Ê£30MB. */
-#define MEM2_ALLOC_TABLE_SIZE   MEM2_MAX_SIZE / MEM2_BLOCK_SIZE /* ÄÚ´æ±í´óÐ¡ */
+/* mem2ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨.mem2ï¿½ï¿½ï¿½â²¿ï¿½ï¿½SDRAMï¿½Ú´ï¿½
+ * ï¿½ï¿½×¢ï¿½ï¿½: ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½LTDCË«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *  - SDRAM ï¿½ï¿½ 32MB ï¿½ï¿½Ê¼ï¿½ï¿½Ö·: 0xC0000000
+ *  - Ã¿ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½(RGB565, 1280x800ï¿½ï¿½ï¿½ï¿½): 1280*800*2 Byte = 0x1F4000 ï¿½ï¿½Ô¼ 2MBï¿½ï¿½
+ *  - Ë«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òª 2 ï¿½ï¿½ï¿½ï¿½Í¬ï¿½Ä»ï¿½ï¿½ï¿½: 0x1F4000 * 2 = 0x3E8000 ï¿½ï¿½Ô¼ 4MBï¿½ï¿½
+ *  - ï¿½ï¿½ï¿½ï¿½ mem2 ï¿½ï¿½ï¿½Ú´ï¿½ ï¿½ï¿½ 32MB - 4MB = 28MB
+ */
+#define MEM2_BLOCK_SIZE         64                              /* ï¿½Ú´ï¿½ï¿½ï¿½Ð¡Îª64ï¿½Ö½ï¿½ */
+#define MEM2_MAX_SIZE           28672 * 1024                    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½28672K,SDRAM 32MB,Ç°4MBï¿½ï¿½ï¿½ï¿½LTDCË«ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ê£28MB. */
+#define MEM2_ALLOC_TABLE_SIZE   MEM2_MAX_SIZE / MEM2_BLOCK_SIZE /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
-/* mem3ÄÚ´æ²ÎÊýÉè¶¨.mem3ÊÇH7ÄÚ²¿µÄSRAM1+SRAM2ÄÚ´æ */
-#define MEM3_BLOCK_SIZE         64                              /* ÄÚ´æ¿é´óÐ¡Îª64×Ö½Ú */
-#define MEM3_MAX_SIZE           240 * 1024                      /* ×î´ó¹ÜÀíÄÚ´æ240K,H7µÄSRAM1+SRAM2¹²256KB */
-#define MEM3_ALLOC_TABLE_SIZE   MEM3_MAX_SIZE / MEM3_BLOCK_SIZE /* ÄÚ´æ±í´óÐ¡ */
+/* mem3ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨.mem3ï¿½ï¿½H7ï¿½Ú²ï¿½ï¿½ï¿½SRAM1+SRAM2ï¿½Ú´ï¿½ */
+#define MEM3_BLOCK_SIZE         64                              /* ï¿½Ú´ï¿½ï¿½ï¿½Ð¡Îª64ï¿½Ö½ï¿½ */
+#define MEM3_MAX_SIZE           240 * 1024                      /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½240K,H7ï¿½ï¿½SRAM1+SRAM2ï¿½ï¿½256KB */
+#define MEM3_ALLOC_TABLE_SIZE   MEM3_MAX_SIZE / MEM3_BLOCK_SIZE /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
-/* mem4ÄÚ´æ²ÎÊýÉè¶¨.mem4ÊÇH7ÄÚ²¿µÄSRAM4ÄÚ´æ */
-#define MEM4_BLOCK_SIZE         64                              /* ÄÚ´æ¿é´óÐ¡Îª64×Ö½Ú */
-#define MEM4_MAX_SIZE           60 * 1024                       /* ×î´ó¹ÜÀíÄÚ´æ60K,H7µÄSRAM4¹²64KB */
-#define MEM4_ALLOC_TABLE_SIZE   MEM4_MAX_SIZE / MEM4_BLOCK_SIZE /* ÄÚ´æ±í´óÐ¡ */
+/* mem4ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨.mem4ï¿½ï¿½H7ï¿½Ú²ï¿½ï¿½ï¿½SRAM4ï¿½Ú´ï¿½ */
+#define MEM4_BLOCK_SIZE         64                              /* ï¿½Ú´ï¿½ï¿½ï¿½Ð¡Îª64ï¿½Ö½ï¿½ */
+#define MEM4_MAX_SIZE           60 * 1024                       /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½60K,H7ï¿½ï¿½SRAM4ï¿½ï¿½64KB */
+#define MEM4_ALLOC_TABLE_SIZE   MEM4_MAX_SIZE / MEM4_BLOCK_SIZE /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
-/* mem5ÄÚ´æ²ÎÊýÉè¶¨.mem5ÊÇH7ÄÚ²¿µÄDTCMÄÚ´æ,´Ë²¿·ÖÄÚ´æ½öCPUºÍMDMA¿ÉÒÔ·ÃÎÊ!!!!!! */
-#define MEM5_BLOCK_SIZE         64                              /* ÄÚ´æ¿é´óÐ¡Îª64×Ö½Ú */
-#define MEM5_MAX_SIZE           120 * 1024                      /* ×î´ó¹ÜÀíÄÚ´æ120K,H7µÄDTCM¹²128KB */
-#define MEM5_ALLOC_TABLE_SIZE   MEM5_MAX_SIZE / MEM5_BLOCK_SIZE /* ÄÚ´æ±í´óÐ¡ */
+/* mem5ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨.mem5ï¿½ï¿½H7ï¿½Ú²ï¿½ï¿½ï¿½DTCMï¿½Ú´ï¿½,ï¿½Ë²ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½CPUï¿½ï¿½MDMAï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½!!!!!! */
+#define MEM5_BLOCK_SIZE         64                              /* ï¿½Ú´ï¿½ï¿½ï¿½Ð¡Îª64ï¿½Ö½ï¿½ */
+#define MEM5_MAX_SIZE           120 * 1024                      /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½120K,H7ï¿½ï¿½DTCMï¿½ï¿½128KB */
+#define MEM5_ALLOC_TABLE_SIZE   MEM5_MAX_SIZE / MEM5_BLOCK_SIZE /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
-/* mem6ÄÚ´æ²ÎÊýÉè¶¨.mem6ÊÇH7ÄÚ²¿µÄITCMÄÚ´æ,´Ë²¿·ÖÄÚ´æ½öCPUºÍMDMA¿ÉÒÔ·ÃÎÊ!!!!!! */
-#define MEM6_BLOCK_SIZE         64                              /* ÄÚ´æ¿é´óÐ¡Îª64×Ö½Ú */
-#define MEM6_MAX_SIZE           60 * 1024                       /* ×î´ó¹ÜÀíÄÚ´æ60K,H7µÄITCM¹²64KB */
-#define MEM6_ALLOC_TABLE_SIZE   MEM6_MAX_SIZE / MEM6_BLOCK_SIZE /* ÄÚ´æ±í´óÐ¡ */
+/* mem6ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨.mem6ï¿½ï¿½H7ï¿½Ú²ï¿½ï¿½ï¿½ITCMï¿½Ú´ï¿½,ï¿½Ë²ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½CPUï¿½ï¿½MDMAï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½!!!!!! */
+#define MEM6_BLOCK_SIZE         64                              /* ï¿½Ú´ï¿½ï¿½ï¿½Ð¡Îª64ï¿½Ö½ï¿½ */
+#define MEM6_MAX_SIZE           60 * 1024                       /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½60K,H7ï¿½ï¿½ITCMï¿½ï¿½64KB */
+#define MEM6_ALLOC_TABLE_SIZE   MEM6_MAX_SIZE / MEM6_BLOCK_SIZE /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¡ */
 
-/* ÄÚ´æ¹ÜÀí¿ØÖÆÆ÷ */
+/* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 struct _m_mallco_dev
 {
-    void (*init)(uint8_t);              /* ³õÊ¼»¯ */
-    uint16_t (*perused)(uint8_t);       /* ÄÚ´æÊ¹ÓÃÂÊ */
-    uint8_t *membase[SRAMBANK];         /* ÄÚ´æ³Ø ¹ÜÀíSRAMBANK¸öÇøÓòµÄÄÚ´æ */
-    uint32_t *memmap[SRAMBANK];         /* ÄÚ´æ¹ÜÀí×´Ì¬±í */
-    uint8_t  memrdy[SRAMBANK];          /* ÄÚ´æ¹ÜÀíÊÇ·ñ¾ÍÐ÷ */
+    void (*init)(uint8_t);              /* ï¿½ï¿½Ê¼ï¿½ï¿½ */
+    uint16_t (*perused)(uint8_t);       /* ï¿½Ú´ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ */
+    uint8_t *membase[SRAMBANK];         /* ï¿½Ú´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½SRAMBANKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ */
+    uint32_t *memmap[SRAMBANK];         /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ */
+    uint8_t  memrdy[SRAMBANK];          /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ */
 };
 
-extern struct _m_mallco_dev mallco_dev;                 /* ÔÚmallco.cÀïÃæ¶¨Òå */
+extern struct _m_mallco_dev mallco_dev;                 /* ï¿½ï¿½mallco.cï¿½ï¿½ï¿½æ¶¨ï¿½ï¿½ */
 
 /******************************************************************************************/
 
-void my_mem_set(void *s, uint8_t c, uint32_t count);    /* ÉèÖÃÄÚ´æ */
-void my_mem_copy(void *des, void *src, uint32_t n);     /* ¸´ÖÆÄÚ´æ */
-void my_mem_init(uint8_t memx);                         /* ÄÚ´æ¹ÜÀí³õÊ¼»¯º¯Êý(Íâ/ÄÚ²¿µ÷ÓÃ) */
-uint32_t my_mem_malloc(uint8_t memx, uint32_t size);    /* ÄÚ´æ·ÖÅä(ÄÚ²¿µ÷ÓÃ) */
-uint8_t my_mem_free(uint8_t memx, uint32_t offset);     /* ÄÚ´æÊÍ·Å(ÄÚ²¿µ÷ÓÃ) */
-uint16_t my_mem_perused(uint8_t memx) ;                 /* »ñµÃÄÚ´æÊ¹ÓÃÂÊ(Íâ/ÄÚ²¿µ÷ÓÃ)  */
+void my_mem_set(void *s, uint8_t c, uint32_t count);    /* ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ */
+void my_mem_copy(void *des, void *src, uint32_t n);     /* ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ */
+void my_mem_init(uint8_t memx);                         /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½/ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½) */
+uint32_t my_mem_malloc(uint8_t memx, uint32_t size);    /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½(ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½) */
+uint8_t my_mem_free(uint8_t memx, uint32_t offset);     /* ï¿½Ú´ï¿½ï¿½Í·ï¿½(ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½) */
+uint16_t my_mem_perused(uint8_t memx) ;                 /* ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½/ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½)  */
 
-/* ÓÃ»§µ÷ÓÃº¯Êý */
-void myfree(uint8_t memx, void *ptr);                   /* ÄÚ´æÊÍ·Å(Íâ²¿µ÷ÓÃ) */
-void *mymalloc(uint8_t memx, uint32_t size);            /* ÄÚ´æ·ÖÅä(Íâ²¿µ÷ÓÃ) */
-void *myrealloc(uint8_t memx, void *ptr, uint32_t size);/* ÖØÐÂ·ÖÅäÄÚ´æ(Íâ²¿µ÷ÓÃ) */
+/* ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ */
+void myfree(uint8_t memx, void *ptr);                   /* ï¿½Ú´ï¿½ï¿½Í·ï¿½(ï¿½â²¿ï¿½ï¿½ï¿½ï¿½) */
+void *mymalloc(uint8_t memx, uint32_t size);            /* ï¿½Ú´ï¿½ï¿½ï¿½ï¿½(ï¿½â²¿ï¿½ï¿½ï¿½ï¿½) */
+void *myrealloc(uint8_t memx, void *ptr, uint32_t size);/* ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Ú´ï¿½(ï¿½â²¿ï¿½ï¿½ï¿½ï¿½) */
 
 #endif
 

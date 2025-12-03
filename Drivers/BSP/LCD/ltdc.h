@@ -1,23 +1,23 @@
 /**
  ****************************************************************************************************
  * @file        ltdc.h
- * @author      ÕýµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @author      ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½Å¶ï¿½(ALIENTEK)
  * @version     V1.0
  * @date        2022-09-06
- * @brief       LTDC Çý¶¯´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+ * @brief       LTDC ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @license     Copyright (c) 2020-2032, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Æ¼ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾
  ****************************************************************************************************
  * @attention
  *
- * ÊµÑéÆ½Ì¨:ÕýµãÔ­×Ó °¢²¨ÂÞ H743¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
+ * Êµï¿½ï¿½Æ½Ì¨:ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ H743ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµ:www.yuanzige.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³:www.openedv.com
+ * ï¿½ï¿½Ë¾ï¿½ï¿½Ö·:www.alientek.com
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Ö·:openedv.taobao.com
  *
- * ÐÞ¸ÄËµÃ÷
+ * ï¿½Þ¸ï¿½Ëµï¿½ï¿½
  * V1.0 20220906
- * µÚÒ»´Î·¢²¼
+ * ï¿½ï¿½Ò»ï¿½Î·ï¿½ï¿½ï¿½
  *
  ****************************************************************************************************
  */
@@ -28,66 +28,66 @@
 #include "./SYSTEM/sys/sys.h"
 
 
-/* LCD LTDCÖØÒª²ÎÊý¼¯ */
+/* LCD LTDCï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 typedef struct  
 {
-    uint32_t pwidth;      /* LTDCÃæ°åµÄ¿í¶È,¹Ì¶¨²ÎÊý,²»ËæÏÔÊ¾·½Ïò¸Ä±ä,Èç¹ûÎª0,ËµÃ÷Ã»ÓÐÈÎºÎRGBÆÁ½ÓÈë */
-    uint32_t pheight;     /* LTDCÃæ°åµÄ¸ß¶È,¹Ì¶¨²ÎÊý,²»ËæÏÔÊ¾·½Ïò¸Ä±ä */
-    uint16_t hsw;         /* Ë®Æ½Í¬²½¿í¶È */
-    uint16_t vsw;         /* ´¹Ö±Í¬²½¿í¶È */
-    uint16_t hbp;         /* Ë®Æ½ºóÀÈ */
-    uint16_t vbp;         /* ´¹Ö±ºóÀÈ */
-    uint16_t hfp;         /* Ë®Æ½Ç°ÀÈ */
-    uint16_t vfp;         /* ´¹Ö±Ç°ÀÈ  */
-    uint8_t activelayer;  /* µ±Ç°²ã±àºÅ:0/1 */
-    uint8_t dir;          /* 0,ÊúÆÁ;1,ºáÆÁ; */
-    uint16_t width;       /* LTDC¿í¶È */
-    uint16_t height;      /* LTDC¸ß¶È */
-    uint32_t pixsize;     /* Ã¿¸öÏñËØËùÕ¼×Ö½ÚÊý */
+    uint32_t pwidth;      /* LTDCï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½,ï¿½Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ä±ï¿½,ï¿½ï¿½ï¿½Îª0,Ëµï¿½ï¿½Ã»ï¿½ï¿½ï¿½Îºï¿½RGBï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    uint32_t pheight;     /* LTDCï¿½ï¿½ï¿½Ä¸ß¶ï¿½,ï¿½Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ */
+    uint16_t hsw;         /* Ë®Æ½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    uint16_t vsw;         /* ï¿½ï¿½Ö±Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    uint16_t hbp;         /* Ë®Æ½ï¿½ï¿½ï¿½ï¿½ */
+    uint16_t vbp;         /* ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ */
+    uint16_t hfp;         /* Ë®Æ½Ç°ï¿½ï¿½ */
+    uint16_t vfp;         /* ï¿½ï¿½Ö±Ç°ï¿½ï¿½  */
+    uint8_t activelayer;  /* ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½:0/1 */
+    uint8_t dir;          /* 0,ï¿½ï¿½ï¿½ï¿½;1,ï¿½ï¿½ï¿½ï¿½; */
+    uint16_t width;       /* LTDCï¿½ï¿½ï¿½ï¿½ */
+    uint16_t height;      /* LTDCï¿½ß¶ï¿½ */
+    uint32_t pixsize;     /* Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½Ö½ï¿½ï¿½ï¿½ */
 }_ltdc_dev; 
 
-extern _ltdc_dev lcdltdc;                   /* ¹ÜÀíLCD LTDC²ÎÊý */
-extern LTDC_HandleTypeDef g_ltdc_handle;    /* LTDC¾ä±ú */
-extern DMA2D_HandleTypeDef g_dma2d_handle;  /* DMA2D¾ä±ú */
+extern _ltdc_dev lcdltdc;                   /* ï¿½ï¿½ï¿½ï¿½LCD LTDCï¿½ï¿½ï¿½ï¿½ */
+extern LTDC_HandleTypeDef g_ltdc_handle;    /* LTDCï¿½ï¿½ï¿½ */
+extern DMA2D_HandleTypeDef g_dma2d_handle;  /* DMA2Dï¿½ï¿½ï¿½ */
 
 /******************************************************************************************/
-/* LTDC_BL/DE/VSYNC/HSYNC/CLK Òý½Å ¶¨Òå 
- * LTDC_R3~R7, G2~G7, B3~B7,ÓÉÓÚÒý½ÅÌ«¶à,¾Í²»ÔÚÕâÀï¶¨ÒåÁË,Ö±½ÓÔÚltcd_initÀïÃæÐÞ¸Ä.ËùÒÔÔÚÒÆÖ²µÄÊ±ºò,
- * ³ýÁË¸ÄÕâ5¸öIO¿Ú, »¹µÃ¸Ältcd_initÀïÃæµÄR3~R7, G2~G7, B3~B7ËùÔÚµÄIO¿Ú.
+/* LTDC_BL/DE/VSYNC/HSYNC/CLK ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+ * LTDC_R3~R7, G2~G7, B3~B7,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½,ï¿½Í²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¶¨ï¿½ï¿½ï¿½ï¿½,Ö±ï¿½ï¿½ï¿½ï¿½ltcd_initï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½Ê±ï¿½ï¿½,
+ * ï¿½ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½5ï¿½ï¿½IOï¿½ï¿½, ï¿½ï¿½ï¿½Ã¸ï¿½ltcd_initï¿½ï¿½ï¿½ï¿½ï¿½R3~R7, G2~G7, B3~B7ï¿½ï¿½ï¿½Úµï¿½IOï¿½ï¿½.
  */
 
-/* BLºÍMCUÆÁ±³¹â½Å¹²ÓÃ ËùÒÔÕâÀï²»ÓÃ¶¨Òå BLÒý½Å */
+/* BLï¿½ï¿½MCUï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï²»ï¿½Ã¶ï¿½ï¿½ï¿½ BLï¿½ï¿½ï¿½ï¿½ */
 #define LTDC_BL_GPIO_PORT               GPIOB
 #define LTDC_BL_GPIO_PIN                GPIO_PIN_5
-#define LTDC_BL_GPIO_CLK_ENABLE()       do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)    /* ËùÔÚIO¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define LTDC_BL_GPIO_CLK_ENABLE()       do{ __HAL_RCC_GPIOB_CLK_ENABLE(); }while(0)    /* ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ */
 
 #define LTDC_DE_GPIO_PORT               GPIOF
 #define LTDC_DE_GPIO_PIN                GPIO_PIN_10
-#define LTDC_DE_GPIO_CLK_ENABLE()       do{ __HAL_RCC_GPIOF_CLK_ENABLE(); }while(0)    /* ËùÔÚIO¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define LTDC_DE_GPIO_CLK_ENABLE()       do{ __HAL_RCC_GPIOF_CLK_ENABLE(); }while(0)    /* ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ */
 
 #define LTDC_VSYNC_GPIO_PORT            GPIOI
 #define LTDC_VSYNC_GPIO_PIN             GPIO_PIN_9
-#define LTDC_VSYNC_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOI_CLK_ENABLE(); }while(0)    /* ËùÔÚIO¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define LTDC_VSYNC_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOI_CLK_ENABLE(); }while(0)    /* ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ */
 
 #define LTDC_HSYNC_GPIO_PORT            GPIOI
 #define LTDC_HSYNC_GPIO_PIN             GPIO_PIN_10
-#define LTDC_HSYNC_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOI_CLK_ENABLE(); }while(0)    /* ËùÔÚIO¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define LTDC_HSYNC_GPIO_CLK_ENABLE()    do{ __HAL_RCC_GPIOI_CLK_ENABLE(); }while(0)    /* ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ */
 
 #define LTDC_CLK_GPIO_PORT              GPIOG
 #define LTDC_CLK_GPIO_PIN               GPIO_PIN_7
-#define LTDC_CLK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOG_CLK_ENABLE(); }while(0)    /* ËùÔÚIO¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define LTDC_CLK_GPIO_CLK_ENABLE()      do{ __HAL_RCC_GPIOG_CLK_ENABLE(); }while(0)    /* ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ */
 
 
-/* ¶¨ÒåÑÕÉ«ÏñËØ¸ñÊ½,Ò»°ãÓÃRGB565 */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ø¸ï¿½Ê½,Ò»ï¿½ï¿½ï¿½ï¿½RGB565 */
 #define LTDC_PIXFORMAT           LTDC_PIXEL_FORMAT_RGB565
 
-/* ¶¨ÒåÄ¬ÈÏ±³¾°²ãÑÕÉ« */
+/* ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É« */
 #define LTDC_BACKLAYERCOLOR      0X00000000
 
-/* LTDCÖ¡»º³åÇøÊ×µØÖ·,ÕâÀï¶¨ÒåÔÚSDRAMÀïÃæ. */
+/* LTDCÖ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×µï¿½Ö·,ï¿½ï¿½ï¿½ï¶¨ï¿½ï¿½ï¿½ï¿½SDRAMï¿½ï¿½ï¿½ï¿½. */
 #define LTDC_FRAME_BUF_ADDR      0XC0000000  
 
-/* LTDC±³¹â¿ØÖÆ */
+/* LTDCï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 #define LTDC_BL(x)   do{ x ? \
                       HAL_GPIO_WritePin(LTDC_BL_GPIO_PORT, LTDC_BL_GPIO_PIN, GPIO_PIN_SET) : \
                       HAL_GPIO_WritePin(LTDC_BL_GPIO_PORT, LTDC_BL_GPIO_PIN, GPIO_PIN_RESET); \
@@ -95,19 +95,23 @@ extern DMA2D_HandleTypeDef g_dma2d_handle;  /* DMA2D¾ä±ú */
 
 /******************************************************************************************/
 
-void ltdc_switch(uint8_t sw);                                                                                   /* LTDC¿ª¹Ø */
-void ltdc_layer_switch(uint8_t layerx, uint8_t sw);                                                             /* ²ã¿ª¹Ø */
-void ltdc_select_layer(uint8_t layerx);                                                                         /* ²ãÑ¡Ôñ */
-void ltdc_display_dir(uint8_t dir);                                                                             /* ÏÔÊ¾·½Ïò¿ØÖÆ */
-void ltdc_draw_point(uint16_t x, uint16_t y, uint32_t color);                                                   /* »­µãº¯Êý */
-uint32_t ltdc_read_point(uint16_t x, uint16_t y);                                                               /* ¶Áµãº¯Êý */
-void ltdc_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint32_t color);                             /* ¾ØÐÎµ¥É«Ìî³äº¯Êý */
-void ltdc_color_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t *color);                      /* ¾ØÐÎ²ÊÉ«Ìî³äº¯Êý */
-void ltdc_clear(uint32_t color);                                                                                /* ÇåÆÁº¯Êý */
-uint8_t ltdc_clk_set(uint32_t pll3n, uint32_t pll3m, uint32_t pll3r);                                           /* LTDCÊ±ÖÓÅäÖÃ */
-void ltdc_layer_window_config(uint8_t layerx, uint16_t sx, uint16_t sy, uint16_t width, uint16_t height);       /* LTDC²ã´°¿ÚÉèÖÃ */
-void ltdc_layer_parameter_config(uint8_t layerx, uint32_t bufaddr, uint8_t pixformat, uint8_t alpha, uint8_t alpha0, uint8_t bfac1, uint8_t bfac2, uint32_t bkcolor); /* LTDC»ù±¾²ÎÊýÉèÖÃ */
-uint16_t ltdc_panelid_read(void);                                                                               /* LTDC ID¶ÁÈ¡º¯Êý */
-void ltdc_init(void);                                                                                           /* LTDC³õÊ¼»¯º¯Êý */
+void ltdc_switch(uint8_t sw);                                                                                   /* LTDCï¿½ï¿½ï¿½ï¿½ */
+void ltdc_layer_switch(uint8_t layerx, uint8_t sw);                                                             /* ï¿½ã¿ªï¿½ï¿½ */
+void ltdc_select_layer(uint8_t layerx);                                                                         /* ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+void ltdc_display_dir(uint8_t dir);                                                                             /* ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+void ltdc_draw_point(uint16_t x, uint16_t y, uint32_t color);                                                   /* ï¿½ï¿½ï¿½ãº¯ï¿½ï¿½ */
+uint32_t ltdc_read_point(uint16_t x, uint16_t y);                                                               /* ï¿½ï¿½ï¿½ãº¯ï¿½ï¿½ */
+void ltdc_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint32_t color);                             /* ï¿½ï¿½ï¿½Îµï¿½É«ï¿½ï¿½äº¯ï¿½ï¿½ */
+void ltdc_color_fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t *color);                      /* ï¿½ï¿½ï¿½Î²ï¿½É«ï¿½ï¿½äº¯ï¿½ï¿½ */
+void ltdc_clear(uint32_t color);                                                                                /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+uint8_t ltdc_clk_set(uint32_t pll3n, uint32_t pll3m, uint32_t pll3r);                                           /* LTDCÊ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+void ltdc_layer_window_config(uint8_t layerx, uint16_t sx, uint16_t sy, uint16_t width, uint16_t height);       /* LTDCï¿½ã´°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+void ltdc_layer_parameter_config(uint8_t layerx, uint32_t bufaddr, uint8_t pixformat, uint8_t alpha, uint8_t alpha0, uint8_t bfac1, uint8_t bfac2, uint32_t bkcolor); /* LTDCï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+uint16_t ltdc_panelid_read(void);                                                                               /* LTDC IDï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ */
+void ltdc_init(void);                                                                                           /* LTDCï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+uint8_t ltdc_is_double_buffered(void);                                                                          /* Ë«ï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ */
+uint32_t ltdc_get_draw_buffer(void);                                                                            /* ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö· */
+uint32_t ltdc_get_display_buffer(void);                                                                         /* ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½Ê¾ï¿½ï¿½Ö· */
+void ltdc_present_draw_buffer(void);                                                                            /* Ë«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ */
 
 #endif 
