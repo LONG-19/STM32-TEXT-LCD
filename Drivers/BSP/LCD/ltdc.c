@@ -676,7 +676,7 @@ void ltdc_init(void)
 
     s_ltdc_disp_buf = 0;
     s_ltdc_double_buf = (g_ltdc_framebuf[1] != NULL);
-    s_ltdc_draw_buf = s_ltdc_double_buf ? 1 : 0;
+    s_ltdc_draw_buf = s_ltdc_disp_buf;          /* ʼ��ʱ,Ĭ�ϻ���ǰ��� */
     /* LTDC���� */
     g_ltdc_handle.Instance = LTDC;
     g_ltdc_handle.Init.HSPolarity = LTDC_HSPOLARITY_AL;         /* ˮƽͬ������ */
@@ -791,6 +791,17 @@ uint32_t ltdc_get_draw_buffer(void)
 uint32_t ltdc_get_display_buffer(void)
 {
     return ltdc_get_buf_addr_internal(s_ltdc_disp_buf);
+}
+
+void ltdc_use_inactive_buffer(void)
+{
+    if (!s_ltdc_double_buf)
+    {
+        s_ltdc_draw_buf = s_ltdc_disp_buf;   /* û��˫��ʱ����ǰ���� */
+        return;
+    }
+
+    s_ltdc_draw_buf = s_ltdc_disp_buf ^ 1;   /* ѡ����ʾ���з����� */
 }
 
 void ltdc_present_draw_buffer(void)
